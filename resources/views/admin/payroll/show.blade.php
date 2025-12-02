@@ -5,19 +5,19 @@
     </h2>
   </x-slot>
 
-  <div class="py-12">
-    <div class="mx-auto max-w-4xl sm:px-6 lg:px-8">
-      <div class="rounded-lg bg-white p-8 shadow dark:bg-gray-800">
-        <div class="mb-6 text-center">
-          <h1 class="text-2xl font-bold text-gray-900 dark:text-white">SLIP GAJI</h1>
-          <p class="mt-2 text-gray-600 dark:text-gray-400">
+  <div class="py-4 sm:py-6 md:py-12">
+    <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+      <div class="rounded-lg bg-white p-4 sm:p-6 md:p-8 shadow dark:bg-gray-800">
+        <div class="mb-4 sm:mb-6 text-center">
+          <h1 class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">SLIP GAJI</h1>
+          <p class="mt-2 text-sm sm:text-base text-gray-600 dark:text-gray-400">
             Periode: {{ \Carbon\Carbon::parse($payroll->period . '-01')->format('F Y') }}
           </p>
         </div>
 
-        <div class="mb-6">
-          <h3 class="mb-2 font-semibold text-gray-900 dark:text-white">Data Karyawan</h3>
-          <div class="grid grid-cols-2 gap-4">
+        <div class="mb-4 sm:mb-6">
+          <h3 class="mb-2 text-sm sm:text-base font-semibold text-gray-900 dark:text-white">Data Karyawan</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <div>
               <p class="text-sm text-gray-600 dark:text-gray-400">Nama</p>
               <p class="font-medium text-gray-900 dark:text-white">{{ $payroll->user->name }}</p>
@@ -37,9 +37,9 @@
           </div>
         </div>
 
-        <div class="mb-6 grid grid-cols-2 gap-6">
+        <div class="mb-4 sm:mb-6 grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
           <div>
-            <h3 class="mb-3 font-semibold text-gray-900 dark:text-white">Penerimaan</h3>
+            <h3 class="mb-3 text-sm sm:text-base font-semibold text-gray-900 dark:text-white">Penerimaan</h3>
             <div class="space-y-2">
               <div class="flex justify-between">
                 <span class="text-gray-600 dark:text-gray-400">Gaji Pokok</span>
@@ -70,7 +70,7 @@
           </div>
 
           <div>
-            <h3 class="mb-3 font-semibold text-gray-900 dark:text-white">Potongan</h3>
+            <h3 class="mb-3 text-sm sm:text-base font-semibold text-gray-900 dark:text-white">Potongan</h3>
             <div class="space-y-2">
               @foreach ($payroll->details->where('type', 'deduction') as $detail)
                 <div class="flex justify-between">
@@ -99,21 +99,21 @@
         </div>
 
         <div class="border-t-2 border-gray-300 pt-4 dark:border-gray-600">
-          <div class="flex justify-between text-xl font-bold">
-            <span>Gaji Bersih (Take Home Pay)</span>
+          <div class="flex flex-col sm:flex-row sm:justify-between gap-2 text-lg sm:text-xl font-bold">
+            <span class="text-sm sm:text-base">Gaji Bersih (Take Home Pay)</span>
             <span class="text-green-600 dark:text-green-400">
               Rp {{ number_format($payroll->net_salary, 0, ',', '.') }}
             </span>
           </div>
         </div>
 
-        <div class="mt-6 flex gap-3">
-          <a href="{{ Auth::user()->isAdmin ? route('admin.payroll.pdf', $payroll->id) : route('payroll.pdf', $payroll->id) }}" download>
-            <x-button type="button">
+        <div class="mt-4 sm:mt-6 flex flex-col sm:flex-row gap-3">
+          <a href="{{ Auth::user()->isAdmin ? route('admin.payroll.pdf', $payroll->id) : route('payroll.pdf', $payroll->id) }}" download class="w-full sm:w-auto">
+            <x-button type="button" class="w-full sm:w-auto">
               Download PDF
             </x-button>
           </a>
-          <x-secondary-button onclick="window.print()">
+          <x-secondary-button onclick="window.print()" class="w-full sm:w-auto">
             Print
           </x-secondary-button>
         </div>

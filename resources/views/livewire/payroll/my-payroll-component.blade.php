@@ -1,29 +1,29 @@
 <div>
-  <div class="mb-4 flex items-center justify-between">
-    <h3 class="text-lg font-semibold leading-tight text-gray-800 dark:text-gray-200">
+  <div class="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <h3 class="text-base sm:text-lg font-semibold leading-tight text-gray-800 dark:text-gray-200">
       Riwayat Gaji
     </h3>
-    <x-input type="month" class="w-48" wire:model.live="period" />
+    <x-input type="month" class="w-full sm:w-48" wire:model.live="period" />
   </div>
 
   <div class="grid grid-cols-1 gap-4">
     @foreach ($payrolls as $payroll)
-      <div class="rounded-lg bg-white p-6 shadow dark:bg-gray-800">
-        <div class="flex items-center justify-between">
-          <div>
-            <h4 class="text-lg font-semibold text-gray-900 dark:text-white">
+      <div class="rounded-lg bg-white p-4 sm:p-6 shadow dark:bg-gray-800">
+        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div class="flex-1">
+            <h4 class="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">
               {{ \Carbon\Carbon::parse($payroll->period . '-01')->format('F Y') }}
             </h4>
-            <p class="text-sm text-gray-600 dark:text-gray-400">
+            <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
               Kehadiran: {{ $payroll->total_attendance }} hari
             </p>
           </div>
-          <div class="text-right">
-            <p class="text-sm text-gray-600 dark:text-gray-400">Gaji Bersih</p>
-            <p class="text-2xl font-bold text-green-600 dark:text-green-400">
+          <div class="flex flex-col items-start sm:items-end sm:text-right">
+            <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Gaji Bersih</p>
+            <p class="text-xl sm:text-2xl font-bold text-green-600 dark:text-green-400">
               Rp {{ number_format($payroll->net_salary, 0, ',', '.') }}
             </p>
-            <x-button href="{{ route('payroll.show', $payroll->id) }}" class="mt-2 text-xs" target="_blank">
+            <x-button href="{{ route('payroll.show', $payroll->id) }}" class="mt-2 w-full sm:w-auto text-xs" target="_blank">
               Lihat Slip Gaji
             </x-button>
           </div>

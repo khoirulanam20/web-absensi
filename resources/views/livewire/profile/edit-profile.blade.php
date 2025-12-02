@@ -274,7 +274,7 @@
 
     <!-- Submit Button -->
     <div class="flex justify-end">
-      <x-button wire:click="update" wire:loading.attr="disabled" wire:target="form.photo">
+      <x-button wire:click="update" wire:loading.attr="disabled" wire:target="form.photo" class="w-full sm:w-auto">
         {{ __('Update Profile') }}
       </x-button>
     </div>

@@ -5,10 +5,10 @@
     </h2>
   </x-slot>
 
-  <div class="py-12">
-    <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
+  <div class="py-4 sm:py-6 md:py-12">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div class="overflow-hidden bg-white shadow-xl dark:bg-gray-800 sm:rounded-lg">
-        <div class="p-6 lg:p-8">
+        <div class="p-4 sm:p-6 lg:p-8">
           {{--  --}}
           <div class="mb-4">
             <x-secondary-button href="{{ url()->previous() }}">
@@ -18,7 +18,7 @@
           </div>
           <form action="{{ route('store-leave-request') }}" method="post" enctype="multipart/form-data">
             @csrf
-            <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
               <div>
                 <div>
                   <x-label for="status" value="{{ __('Status') }}" />
@@ -107,7 +107,7 @@
             <input type="hidden" id="lng" name="lng" value="{{ $attendance?->longitude }}">
 
             <div class="mb-3 mt-4 flex items-center justify-end">
-              <x-button class="ms-4">
+              <x-button class="w-full sm:w-auto sm:ms-4">
                 {{ __('Save') }}
               </x-button>
             </div>

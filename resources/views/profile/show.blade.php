@@ -6,7 +6,7 @@
   </x-slot>
 
   <div>
-    <div class="mx-auto max-w-7xl py-10 sm:px-6 lg:px-8">
+    <div class="mx-auto max-w-7xl py-4 sm:py-6 md:py-10 px-4 sm:px-6 lg:px-8">
       @if (Auth::user()->group === 'user')
         <!-- Employee Profile Edit -->
         <div class="bg-white shadow-xl dark:bg-gray-800 sm:rounded-lg">

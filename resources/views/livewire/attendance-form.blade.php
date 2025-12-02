@@ -53,7 +53,7 @@
         @endif
 
         @if ($attendance)
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 mb-4">
             <div class="bg-blue-100 dark:bg-blue-900 p-4 rounded-lg">
               <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 {{ __('Absen Masuk') }}
@@ -122,7 +122,7 @@
 
     <!-- Action Card -->
     <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
-      <div class="p-6">
+      <div class="p-4 sm:p-6">
         @if (!$attendance)
           <!-- Belum Absen - Show Check In Button -->
           <div class="text-center">
@@ -131,7 +131,7 @@
             </h3>
             <button
               wire:click="openCheckInModal"
-              class="inline-flex items-center px-6 py-3 bg-green-600 border border-transparent rounded-md font-semibold text-base text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">
+              class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 bg-green-600 border border-transparent rounded-md font-semibold text-base text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">
               <x-heroicon-o-clock class="mr-2 h-5 w-5" />
               {{ __('Check In') }}
             </button>
@@ -186,7 +186,7 @@
               </div>
               <button
                 wire:click="openCheckOutModal"
-                class="inline-flex items-center px-6 py-3 bg-red-600 border border-transparent rounded-md font-semibold text-base text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">
+                class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 bg-red-600 border border-transparent rounded-md font-semibold text-base text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">
                 <x-heroicon-o-arrow-right-on-rectangle class="mr-2 h-5 w-5" />
                 {{ __('Check Out') }}
               </button>
