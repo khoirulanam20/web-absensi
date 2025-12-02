@@ -28,7 +28,9 @@ class Attendance extends Model
         'latitude',
         'longitude',
         'status',
+        'is_wfh',
         'note',
+        'notes',
         'attachment',
     ];
 
@@ -38,6 +40,7 @@ class Attendance extends Model
             'date' => 'datetime:Y-m-d',
             'time_in' => 'datetime:H:i:s',
             'time_out' => 'datetime:H:i:s',
+            'is_wfh' => 'boolean',
         ];
     }
 

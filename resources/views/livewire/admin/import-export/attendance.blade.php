@@ -107,6 +107,8 @@
             <th class="{{ $thClass }} text-nowrap">Barcode Id</th>
             <th class="{{ $thClass }}">Coordinates</th>
             <th class="{{ $thClass }}">Status</th>
+            <th class="{{ $thClass }}">Lokasi (WFH/WFO)</th>
+            <th class="{{ $thClass }}">Notes</th>
             <th class="{{ $thClass }}">Note</th>
             <th class="{{ $thClass }}">Attachment</th>
           </tr>
@@ -127,7 +129,57 @@
               <td class="{{ $tdClass }}">
                 {{ $attendance->lat_lng ? $attendance->latitude . ',' . $attendance->longitude : null }}
               </td>
-              <td class="{{ $tdClass }} text-nowrap">{{ __($attendance->status) }}</td>
+              <td class="{{ $tdClass }} text-nowrap">
+                @php
+                  $statusLabels = [
+                    'hadir' => 'Hadir',
+                    'izin' => 'Izin',
+                    'sakit' => 'Sakit',
+                    'cuti' => 'Cuti',
+                    'present' => 'Hadir',
+                    'late' => 'Terlambat',
+                    'excused' => 'Izin',
+                    'sick' => 'Sakit',
+                    'absent' => 'Tidak Hadir'
+                  ];
+                  $statusLabel = $statusLabels[$attendance->status] ?? ucfirst($attendance->status);
+                  $statusColors = [
+                    'hadir' => 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300',
+                    'present' => 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300',
+                    'late' => 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300',
+                    'izin' => 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300',
+                    'excused' => 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300',
+                    'sakit' => 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300',
+                    'sick' => 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300',
+                    'cuti' => 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300',
+                    'absent' => 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300',
+                  ];
+                  $statusColor = $statusColors[$attendance->status] ?? 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300';
+                @endphp
+                <span class="px-2 py-1 text-xs font-semibold rounded-full {{ $statusColor }}">
+                  {{ $statusLabel }}
+                </span>
+              </td>
+              <td class="{{ $tdClass }}">
+                @if ($attendance->status === 'hadir' || $attendance->status === 'present')
+                  @if ($attendance->is_wfh)
+                    <span class="inline-flex items-center px-2 py-1 text-xs font-semibold rounded-full bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300">
+                      <x-heroicon-o-home class="mr-1 h-3 w-3" />
+                      WFH
+                    </span>
+                  @else
+                    <span class="inline-flex items-center px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300">
+                      <x-heroicon-o-building-office class="mr-1 h-3 w-3" />
+                      WFO
+                    </span>
+                  @endif
+                @else
+                  <span class="text-gray-400">-</span>
+                @endif
+              </td>
+              <td class="{{ $tdClass }}">
+                <div class="w-48">{{ Str::limit($attendance->notes ?? $attendance->note, 30, '...') }}</div>
+              </td>
               <td class="{{ $tdClass }}">
                 <div class="w-48">{{ Str::limit($attendance->note, 30, '...') }}</div>
               </td>

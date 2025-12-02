@@ -9,7 +9,7 @@ use Livewire\Form;
 
 class ShiftForm extends Form
 {
-    public ?Shift $shift;
+    public ?Shift $shift = null;
 
     public $name = '';
     public $start_time = null;
@@ -22,7 +22,7 @@ class ShiftForm extends Form
                 'required',
                 'string',
                 'max:255',
-                Rule::unique('shifts')->ignore($this->shift)
+                Rule::unique('shifts')->ignore($this->shift?->id)
             ],
             'start_time' => ['required'],
             'end_time' => ['nullable'],
@@ -53,6 +53,9 @@ class ShiftForm extends Form
         if (Auth::user()->isNotAdmin) {
             return abort(403);
         }
+        if (!$this->shift) {
+            throw new \RuntimeException('Shift not set. Use setShift() before updating.');
+        }
         $this->validate();
         $this->shift->update($this->all());
         $this->reset();
@@ -62,6 +65,9 @@ class ShiftForm extends Form
     {
         if (Auth::user()->isNotAdmin) {
             return abort(403);
+        }
+        if (!$this->shift) {
+            throw new \RuntimeException('Shift not set. Use setShift() before deleting.');
         }
         $this->shift->delete();
         $this->reset();

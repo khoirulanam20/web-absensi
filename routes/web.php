@@ -1,11 +1,12 @@
 <?php
 
 use App\Helpers;
-use App\Http\Controllers\Admin\BarcodeController;
+use App\Http\Controllers\Admin\LocationSettingController;
 use App\Http\Controllers\Admin\MasterDataController;
 use App\Http\Controllers\Admin\AttendanceController;
 use App\Http\Controllers\Admin\EmployeeController;
 use App\Http\Controllers\Admin\ImportExportController;
+use App\Http\Controllers\Admin\PayrollController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserAttendanceController;
 use Illuminate\Support\Facades\Auth;
@@ -44,21 +45,19 @@ Route::middleware([
             return view('admin.dashboard');
         })->name('admin.dashboard');
 
-        // Barcode
-        Route::resource('/barcodes', BarcodeController::class)
-            ->only(['index', 'show', 'create', 'store', 'edit', 'update'])
-            ->names([
-                'index' => 'admin.barcodes',
-                'show' => 'admin.barcodes.show',
-                'create' => 'admin.barcodes.create',
-                'store' => 'admin.barcodes.store',
-                'edit' => 'admin.barcodes.edit',
-                'update' => 'admin.barcodes.update',
-            ]);
-        Route::get('/barcodes/download/all', [BarcodeController::class, 'downloadAll'])
-            ->name('admin.barcodes.downloadall');
-        Route::get('/barcodes/{id}/download', [BarcodeController::class, 'download'])
-            ->name('admin.barcodes.download');
+        // Location Settings (Pengaturan Geolokasi)
+        Route::get('/location-settings', [LocationSettingController::class, 'index'])
+            ->name('admin.location-settings');
+        Route::get('/location-settings/create', [LocationSettingController::class, 'create'])
+            ->name('admin.location-settings.create');
+        Route::post('/location-settings', [LocationSettingController::class, 'store'])
+            ->name('admin.location-settings.store');
+        Route::get('/location-settings/{id}/edit', [LocationSettingController::class, 'edit'])
+            ->name('admin.location-settings.edit');
+        Route::put('/location-settings/{id}', [LocationSettingController::class, 'update'])
+            ->name('admin.location-settings.update');
+        Route::delete('/location-settings/{id}', [LocationSettingController::class, 'destroy'])
+            ->name('admin.location-settings.destroy');
 
         // User/Employee/Karyawan
         Route::resource('/employees', EmployeeController::class)
@@ -100,7 +99,32 @@ Route::middleware([
             ->name('admin.users.export');
         Route::get('/attendances/export', [ImportExportController::class, 'exportAttendances'])
             ->name('admin.attendances.export');
+
+        // Payroll
+        Route::get('/payroll', [PayrollController::class, 'index'])
+            ->name('admin.payroll.index');
+        Route::get('/payroll/salary-components', [PayrollController::class, 'salaryComponents'])
+            ->name('admin.payroll.salary-components');
+        Route::get('/payroll/employee-salaries', [PayrollController::class, 'employeeSalaries'])
+            ->name('admin.payroll.employee-salaries');
+        Route::get('/payroll/generate', [PayrollController::class, 'generate'])
+            ->name('admin.payroll.generate');
+        Route::get('/payroll/{id}', [PayrollController::class, 'show'])
+            ->name('admin.payroll.show');
+        Route::get('/payroll/{id}/pdf', [PayrollController::class, 'pdf'])
+            ->name('admin.payroll.pdf');
     });
+});
+
+// User Payroll Routes (accessible by both user and admin)
+Route::middleware(['auth'])->group(function () {
+    Route::get('/payroll', function () {
+        return view('payroll.index');
+    })->name('payroll.index');
+    Route::get('/payroll/{id}', [\App\Http\Controllers\Admin\PayrollController::class, 'show'])
+        ->name('payroll.show');
+    Route::get('/payroll/{id}/pdf', [\App\Http\Controllers\Admin\PayrollController::class, 'pdf'])
+        ->name('payroll.pdf');
 });
 
 Livewire::setUpdateRoute(function ($handle) {

@@ -37,10 +37,15 @@
     @endif
 
     <!-- Page Content -->
-    <main>
+    <main class="{{ !Auth::check() || Auth::user()->isAdmin ? '' : 'pb-20' }}">
       {{ $slot }}
     </main>
   </div>
+
+  <!-- Bottom Navbar for Mobile (User only) -->
+  @auth
+    <x-bottom-navbar />
+  @endauth
 
   @stack('modals')
 

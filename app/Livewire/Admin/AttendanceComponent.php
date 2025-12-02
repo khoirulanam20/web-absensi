@@ -26,6 +26,11 @@ class AttendanceComponent extends Component
     public ?string $jobTitle = null;
     public ?string $search = null;
 
+    # delete
+    public $deleteAttendanceId = null;
+    public $deleteAttendanceName = null;
+    public $confirmingDeletion = false;
+
     public function mount()
     {
         $this->date = date('Y-m-d');
@@ -90,6 +95,7 @@ class AttendanceComponent extends Component
                                     $v->setAttribute('coordinates', $v->lat_lng);
                                     $v->setAttribute('lat', $v->latitude);
                                     $v->setAttribute('lng', $v->longitude);
+                                    $v->setAttribute('is_wfh', $v->is_wfh);
                                     if ($v->attachment) {
                                         $v->setAttribute('attachment', $v->attachment_url);
                                     }
@@ -110,13 +116,14 @@ class AttendanceComponent extends Component
                             $attendances = Attendance::filter(
                                 userId: $user->id,
                                 week: $this->week,
-                            )->get(['id', 'status', 'date', 'latitude', 'longitude', 'attachment', 'note']);
+                            )->get(['id', 'status', 'date', 'latitude', 'longitude', 'attachment', 'note', 'is_wfh']);
 
                             return $attendances->map(
                                 function (Attendance $v) {
                                     $v->setAttribute('coordinates', $v->lat_lng);
                                     $v->setAttribute('lat', $v->latitude);
                                     $v->setAttribute('lng', $v->longitude);
+                                    $v->setAttribute('is_wfh', $v->is_wfh);
                                     if ($v->attachment) {
                                         $v->setAttribute('attachment', $v->attachment_url);
                                     }
@@ -135,13 +142,14 @@ class AttendanceComponent extends Component
                             $attendances = Attendance::filter(
                                 month: $this->month,
                                 userId: $user->id,
-                            )->get(['id', 'status', 'date', 'latitude', 'longitude', 'attachment', 'note']);
+                            )->get(['id', 'status', 'date', 'latitude', 'longitude', 'attachment', 'note', 'is_wfh']);
 
                             return $attendances->map(
                                 function (Attendance $v) {
                                     $v->setAttribute('coordinates', $v->lat_lng);
                                     $v->setAttribute('lat', $v->latitude);
                                     $v->setAttribute('lng', $v->longitude);
+                                    $v->setAttribute('is_wfh', $v->is_wfh);
                                     if ($v->attachment) {
                                         $v->setAttribute('attachment', $v->attachment_url);
                                     }
@@ -153,11 +161,41 @@ class AttendanceComponent extends Component
                 } else {
                     /** @var Collection */
                     $attendances = Attendance::where('user_id', $user->id)
-                        ->get(['id', 'status', 'date', 'latitude', 'longitude', 'attachment', 'note']);
+                        ->get(['id', 'status', 'date', 'latitude', 'longitude', 'attachment', 'note', 'is_wfh']);
                 }
                 $user->attendances = $attendances;
                 return $user;
             });
         return view('livewire.admin.attendance', ['employees' => $employees, 'dates' => $dates]);
+    }
+
+    public function confirmDeletion($id, $userName, $date)
+    {
+        $this->deleteAttendanceId = $id;
+        $this->deleteAttendanceName = "$userName - " . Carbon::parse($date)->format('d/m/Y');
+        $this->confirmingDeletion = true;
+    }
+
+    public function delete()
+    {
+        if (!$this->deleteAttendanceId) {
+            return;
+        }
+
+        $attendance = Attendance::find($this->deleteAttendanceId);
+        if ($attendance) {
+            $user = $attendance->user;
+            $date = Carbon::parse($attendance->date);
+            
+            $attendance->delete();
+            
+            // Clear cache using model method
+            Attendance::clearUserAttendanceCache($user, $date);
+            
+            $this->confirmingDeletion = false;
+            $this->deleteAttendanceId = null;
+            $this->deleteAttendanceName = null;
+            $this->banner(__('Attendance deleted successfully.'));
+        }
     }
 }

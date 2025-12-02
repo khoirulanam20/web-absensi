@@ -11,6 +11,8 @@
       <th>Barcode Id</th>
       <th>Coordinates</th>
       <th>Status</th>
+      <th>Lokasi (WFH/WFO)</th>
+      <th>Notes</th>
       <th>Note</th>
       <th>Attachment</th>
       <th>Created At</th>
@@ -35,7 +37,25 @@
         <td data-type="s">
           {{ $attendance->lat_lng ? $attendance->latitude . ',' . $attendance->longitude : null }}
         </td>
-        <td>{{ __($attendance->status) }}</td>
+        <td>
+          @php
+            $statusLabels = [
+              'hadir' => 'Hadir',
+              'izin' => 'Izin',
+              'sakit' => 'Sakit',
+              'cuti' => 'Cuti',
+              'present' => 'Hadir',
+              'late' => 'Terlambat',
+              'excused' => 'Izin',
+              'sick' => 'Sakit',
+              'absent' => 'Tidak Hadir'
+            ];
+            $statusLabel = $statusLabels[$attendance->status] ?? ucfirst($attendance->status);
+          @endphp
+          {{ $statusLabel }}
+        </td>
+        <td>{{ $attendance->is_wfh ? 'WFH (Rumah)' : ($attendance->status === 'hadir' || $attendance->status === 'present' ? 'WFO (Kantor)' : '-') }}</td>
+        <td>{{ $attendance->notes }}</td>
         <td>{{ $attendance->note }}</td>
         <td>{{ $attendance->attachment }}</td>
         <td>{{ $attendance->created_at }}</td>

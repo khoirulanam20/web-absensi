@@ -111,6 +111,9 @@
             <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300">
               {{ __('Time Out') }}
             </th>
+            <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300">
+              {{ __('Lokasi') }}
+            </th>
           @endif
           @if (!$isPerDayFilter)
             @foreach (['H', 'T', 'I', 'S', 'A'] as $_st)
@@ -239,6 +242,31 @@
               <td class="{{ $class }} group-hover:bg-gray-100 dark:group-hover:bg-gray-700">
                 {{ $timeOut ?? '-' }}
               </td>
+              <td class="{{ $class }} group-hover:bg-gray-100 dark:group-hover:bg-gray-700">
+                @if ($attendance)
+                  @php
+                    $isWfh = $attendance['is_wfh'] ?? false;
+                    $status = $attendance['status'] ?? null;
+                  @endphp
+                  @if ($status === 'hadir' || $status === 'present' || $status === 'late')
+                    @if ($isWfh)
+                      <span class="inline-flex items-center px-2 py-1 text-xs font-semibold rounded-full bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300">
+                        <x-heroicon-o-home class="mr-1 h-3 w-3" />
+                        WFH
+                      </span>
+                    @else
+                      <span class="inline-flex items-center px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300">
+                        <x-heroicon-o-building-office class="mr-1 h-3 w-3" />
+                        WFO
+                      </span>
+                    @endif
+                  @else
+                    <span class="text-gray-400">-</span>
+                  @endif
+                @else
+                  <span class="text-gray-400">-</span>
+                @endif
+              </td>
             @endif
 
             {{-- Total --}}
@@ -259,11 +287,18 @@
               <td
                 class="cursor-pointer text-center text-sm font-medium text-gray-900 group-hover:bg-gray-100 dark:text-white dark:group-hover:bg-gray-700">
                 <div class="flex items-center justify-center gap-3">
-                  @if ($attendance && ($attendance['attachment'] || $attendance['note'] || $attendance['coordinates']))
-                    <x-button type="button" wire:click="show({{ $attendance['id'] }})"
-                      onclick="setLocation({{ $attendance['lat'] ?? 0 }}, {{ $attendance['lng'] ?? 0 }})">
-                      {{ __('Detail') }}
-                    </x-button>
+                  @if ($attendance)
+                    @if ($attendance['attachment'] || $attendance['note'] || $attendance['coordinates'])
+                      <x-button type="button" wire:click="show({{ $attendance['id'] }})"
+                        onclick="setLocation({{ $attendance['lat'] ?? 0 }}, {{ $attendance['lng'] ?? 0 }})">
+                        {{ __('Detail') }}
+                      </x-button>
+                    @endif
+                    <x-danger-button type="button" 
+                      wire:click="confirmDeletion({{ $attendance['id'] }}, '{{ $employee->name }}', '{{ $attendance['date'] }}')"
+                      wire:loading.attr="disabled">
+                      {{ __('Hapus') }}
+                    </x-danger-button>
                   @else
                     -
                   @endif
@@ -286,4 +321,28 @@
 
   <x-attendance-detail-modal :current-attendance="$currentAttendance" />
   @stack('attendance-detail-scripts')
+
+  <!-- Delete Confirmation Modal -->
+  <x-confirmation-modal wire:model="confirmingDeletion">
+    <x-slot name="title">
+      Hapus Data Absensi
+    </x-slot>
+
+    <x-slot name="content">
+      Apakah Anda yakin ingin menghapus data absensi untuk <b>{{ $deleteAttendanceName }}</b>?
+      <p class="mt-2 text-sm text-red-600 dark:text-red-400">
+        Tindakan ini tidak dapat dibatalkan.
+      </p>
+    </x-slot>
+
+    <x-slot name="footer">
+      <x-secondary-button wire:click="$toggle('confirmingDeletion')" wire:loading.attr="disabled">
+        {{ __('Cancel') }}
+      </x-secondary-button>
+
+      <x-danger-button class="ml-2" wire:click="delete" wire:loading.attr="disabled">
+        {{ __('Delete') }}
+      </x-danger-button>
+    </x-slot>
+  </x-confirmation-modal>
 </div>

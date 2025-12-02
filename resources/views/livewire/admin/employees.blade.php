@@ -337,6 +337,123 @@
             <x-input-error for="form.education_id" class="mt-2" message="{{ $message }}" />
           @enderror
         </div>
+
+        <!-- Employee Details Section -->
+        <div class="mt-6 border-t border-gray-200 pt-6 dark:border-gray-700">
+          <h3 class="mb-4 text-lg font-semibold text-gray-800 dark:text-gray-200">Data Karyawan Detail</h3>
+          
+          <!-- Data Pribadi -->
+          <div class="mb-4">
+            <h4 class="mb-3 text-sm font-medium text-gray-700 dark:text-gray-300">Data Pribadi</h4>
+            <div class="mt-4 flex flex-col gap-4 sm:flex-row sm:gap-3">
+              <div class="w-full">
+                <x-label for="nik">NIK</x-label>
+                <x-input id="nik" class="mt-1 block w-full" type="text" wire:model="form.nik" placeholder="3201010101010001" />
+                @error('form.nik')
+                  <x-input-error for="form.nik" class="mt-2" message="{{ $message }}" />
+                @enderror
+              </div>
+              <div class="w-full">
+                <x-label for="npwp">NPWP</x-label>
+                <x-input id="npwp" class="mt-1 block w-full" type="text" wire:model="form.npwp" placeholder="12.345.678.9-012.000" />
+                @error('form.npwp')
+                  <x-input-error for="form.npwp" class="mt-2" message="{{ $message }}" />
+                @enderror
+              </div>
+            </div>
+            <div class="mt-4 flex flex-col gap-4 sm:flex-row sm:gap-3">
+              <div class="w-full">
+                <x-label for="bpjs_tk">BPJS Ketenagakerjaan</x-label>
+                <x-input id="bpjs_tk" class="mt-1 block w-full" type="text" wire:model="form.bpjs_tk" placeholder="1234567890" />
+                @error('form.bpjs_tk')
+                  <x-input-error for="form.bpjs_tk" class="mt-2" message="{{ $message }}" />
+                @enderror
+              </div>
+              <div class="w-full">
+                <x-label for="bpjs_kes">BPJS Kesehatan</x-label>
+                <x-input id="bpjs_kes" class="mt-1 block w-full" type="text" wire:model="form.bpjs_kes" placeholder="1234567890" />
+                @error('form.bpjs_kes')
+                  <x-input-error for="form.bpjs_kes" class="mt-2" message="{{ $message }}" />
+                @enderror
+              </div>
+            </div>
+            <div class="mt-4 flex flex-col gap-4 sm:flex-row sm:gap-3">
+              <div class="w-full">
+                <x-label for="marital_status">Status Pernikahan</x-label>
+                <x-select id="marital_status" class="mt-1 block w-full" wire:model="form.marital_status">
+                  <option value="">{{ __('Select Status') }}</option>
+                  <option value="single">Belum Menikah</option>
+                  <option value="married">Menikah</option>
+                  <option value="divorced">Cerai</option>
+                  <option value="widowed">Cerai Mati</option>
+                </x-select>
+                @error('form.marital_status')
+                  <x-input-error for="form.marital_status" class="mt-2" message="{{ $message }}" />
+                @enderror
+              </div>
+              <div class="w-full">
+                <x-label for="phone_emergency">Kontak Darurat</x-label>
+                <x-input id="phone_emergency" class="mt-1 block w-full" type="text" wire:model="form.phone_emergency" placeholder="+628123456789" />
+                @error('form.phone_emergency')
+                  <x-input-error for="form.phone_emergency" class="mt-2" message="{{ $message }}" />
+                @enderror
+              </div>
+            </div>
+          </div>
+
+          <!-- Data Karir -->
+          <div class="mb-4">
+            <h4 class="mb-3 text-sm font-medium text-gray-700 dark:text-gray-300">Data Karir</h4>
+            <div class="mt-4 flex flex-col gap-4 sm:flex-row sm:gap-3">
+              <div class="w-full">
+                <x-label for="join_date">Tanggal Bergabung</x-label>
+                <x-input id="join_date" class="mt-1 block w-full" type="date" wire:model="form.join_date" />
+                @error('form.join_date')
+                  <x-input-error for="form.join_date" class="mt-2" message="{{ $message }}" />
+                @enderror
+              </div>
+              <div class="w-full">
+                <x-label for="end_contract_date">Tanggal Akhir Kontrak</x-label>
+                <x-input id="end_contract_date" class="mt-1 block w-full" type="date" wire:model="form.end_contract_date" />
+                @error('form.end_contract_date')
+                  <x-input-error for="form.end_contract_date" class="mt-2" message="{{ $message }}" />
+                @enderror
+              </div>
+            </div>
+            <div class="mt-4">
+              <x-label for="employment_status">Status Karyawan</x-label>
+              <x-select id="employment_status" class="mt-1 block w-full" wire:model="form.employment_status">
+                <option value="probation">Probation</option>
+                <option value="contract">Kontrak</option>
+                <option value="permanent">Tetap</option>
+              </x-select>
+              @error('form.employment_status')
+                <x-input-error for="form.employment_status" class="mt-2" message="{{ $message }}" />
+              @enderror
+            </div>
+          </div>
+
+          <!-- Data Bank -->
+          <div class="mb-4">
+            <h4 class="mb-3 text-sm font-medium text-gray-700 dark:text-gray-300">Data Bank</h4>
+            <div class="mt-4 flex flex-col gap-4 sm:flex-row sm:gap-3">
+              <div class="w-full">
+                <x-label for="bank_name">Nama Bank</x-label>
+                <x-input id="bank_name" class="mt-1 block w-full" type="text" wire:model="form.bank_name" placeholder="BCA, Mandiri, dll" />
+                @error('form.bank_name')
+                  <x-input-error for="form.bank_name" class="mt-2" message="{{ $message }}" />
+                @enderror
+              </div>
+              <div class="w-full">
+                <x-label for="bank_account_number">Nomor Rekening</x-label>
+                <x-input id="bank_account_number" class="mt-1 block w-full" type="text" wire:model="form.bank_account_number" placeholder="1234567890" />
+                @error('form.bank_account_number')
+                  <x-input-error for="form.bank_account_number" class="mt-2" message="{{ $message }}" />
+                @enderror
+              </div>
+            </div>
+          </div>
+        </div>
       </x-slot>
 
       <x-slot name="footer">
@@ -538,6 +655,123 @@
           @error('form.education_id')
             <x-input-error for="form.education_id" class="mt-2" message="{{ $message }}" />
           @enderror
+        </div>
+
+        <!-- Employee Details Section -->
+        <div class="mt-6 border-t border-gray-200 pt-6 dark:border-gray-700">
+          <h3 class="mb-4 text-lg font-semibold text-gray-800 dark:text-gray-200">Data Karyawan Detail</h3>
+          
+          <!-- Data Pribadi -->
+          <div class="mb-4">
+            <h4 class="mb-3 text-sm font-medium text-gray-700 dark:text-gray-300">Data Pribadi</h4>
+            <div class="mt-4 flex flex-col gap-4 sm:flex-row sm:gap-3">
+              <div class="w-full">
+                <x-label for="nik">NIK</x-label>
+                <x-input id="nik" class="mt-1 block w-full" type="text" wire:model="form.nik" placeholder="3201010101010001" />
+                @error('form.nik')
+                  <x-input-error for="form.nik" class="mt-2" message="{{ $message }}" />
+                @enderror
+              </div>
+              <div class="w-full">
+                <x-label for="npwp">NPWP</x-label>
+                <x-input id="npwp" class="mt-1 block w-full" type="text" wire:model="form.npwp" placeholder="12.345.678.9-012.000" />
+                @error('form.npwp')
+                  <x-input-error for="form.npwp" class="mt-2" message="{{ $message }}" />
+                @enderror
+              </div>
+            </div>
+            <div class="mt-4 flex flex-col gap-4 sm:flex-row sm:gap-3">
+              <div class="w-full">
+                <x-label for="bpjs_tk">BPJS Ketenagakerjaan</x-label>
+                <x-input id="bpjs_tk" class="mt-1 block w-full" type="text" wire:model="form.bpjs_tk" placeholder="1234567890" />
+                @error('form.bpjs_tk')
+                  <x-input-error for="form.bpjs_tk" class="mt-2" message="{{ $message }}" />
+                @enderror
+              </div>
+              <div class="w-full">
+                <x-label for="bpjs_kes">BPJS Kesehatan</x-label>
+                <x-input id="bpjs_kes" class="mt-1 block w-full" type="text" wire:model="form.bpjs_kes" placeholder="1234567890" />
+                @error('form.bpjs_kes')
+                  <x-input-error for="form.bpjs_kes" class="mt-2" message="{{ $message }}" />
+                @enderror
+              </div>
+            </div>
+            <div class="mt-4 flex flex-col gap-4 sm:flex-row sm:gap-3">
+              <div class="w-full">
+                <x-label for="marital_status">Status Pernikahan</x-label>
+                <x-select id="marital_status" class="mt-1 block w-full" wire:model="form.marital_status">
+                  <option value="">{{ __('Select Status') }}</option>
+                  <option value="single">Belum Menikah</option>
+                  <option value="married">Menikah</option>
+                  <option value="divorced">Cerai</option>
+                  <option value="widowed">Cerai Mati</option>
+                </x-select>
+                @error('form.marital_status')
+                  <x-input-error for="form.marital_status" class="mt-2" message="{{ $message }}" />
+                @enderror
+              </div>
+              <div class="w-full">
+                <x-label for="phone_emergency">Kontak Darurat</x-label>
+                <x-input id="phone_emergency" class="mt-1 block w-full" type="text" wire:model="form.phone_emergency" placeholder="+628123456789" />
+                @error('form.phone_emergency')
+                  <x-input-error for="form.phone_emergency" class="mt-2" message="{{ $message }}" />
+                @enderror
+              </div>
+            </div>
+          </div>
+
+          <!-- Data Karir -->
+          <div class="mb-4">
+            <h4 class="mb-3 text-sm font-medium text-gray-700 dark:text-gray-300">Data Karir</h4>
+            <div class="mt-4 flex flex-col gap-4 sm:flex-row sm:gap-3">
+              <div class="w-full">
+                <x-label for="join_date">Tanggal Bergabung</x-label>
+                <x-input id="join_date" class="mt-1 block w-full" type="date" wire:model="form.join_date" />
+                @error('form.join_date')
+                  <x-input-error for="form.join_date" class="mt-2" message="{{ $message }}" />
+                @enderror
+              </div>
+              <div class="w-full">
+                <x-label for="end_contract_date">Tanggal Akhir Kontrak</x-label>
+                <x-input id="end_contract_date" class="mt-1 block w-full" type="date" wire:model="form.end_contract_date" />
+                @error('form.end_contract_date')
+                  <x-input-error for="form.end_contract_date" class="mt-2" message="{{ $message }}" />
+                @enderror
+              </div>
+            </div>
+            <div class="mt-4">
+              <x-label for="employment_status">Status Karyawan</x-label>
+              <x-select id="employment_status" class="mt-1 block w-full" wire:model="form.employment_status">
+                <option value="probation">Probation</option>
+                <option value="contract">Kontrak</option>
+                <option value="permanent">Tetap</option>
+              </x-select>
+              @error('form.employment_status')
+                <x-input-error for="form.employment_status" class="mt-2" message="{{ $message }}" />
+              @enderror
+            </div>
+          </div>
+
+          <!-- Data Bank -->
+          <div class="mb-4">
+            <h4 class="mb-3 text-sm font-medium text-gray-700 dark:text-gray-300">Data Bank</h4>
+            <div class="mt-4 flex flex-col gap-4 sm:flex-row sm:gap-3">
+              <div class="w-full">
+                <x-label for="bank_name">Nama Bank</x-label>
+                <x-input id="bank_name" class="mt-1 block w-full" type="text" wire:model="form.bank_name" placeholder="BCA, Mandiri, dll" />
+                @error('form.bank_name')
+                  <x-input-error for="form.bank_name" class="mt-2" message="{{ $message }}" />
+                @enderror
+              </div>
+              <div class="w-full">
+                <x-label for="bank_account_number">Nomor Rekening</x-label>
+                <x-input id="bank_account_number" class="mt-1 block w-full" type="text" wire:model="form.bank_account_number" placeholder="1234567890" />
+                @error('form.bank_account_number')
+                  <x-input-error for="form.bank_account_number" class="mt-2" message="{{ $message }}" />
+                @enderror
+              </div>
+            </div>
+          </div>
         </div>
       </x-slot>
 

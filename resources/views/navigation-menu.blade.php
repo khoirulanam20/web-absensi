@@ -16,8 +16,8 @@
             <x-nav-link href="{{ route('admin.dashboard') }}" :active="request()->routeIs('admin.dashboard')">
               {{ __('Dashboard') }}
             </x-nav-link>
-            <x-nav-link href="{{ route('admin.barcodes') }}" :active="request()->routeIs('admin.barcodes')">
-              {{ __('Barcode') }}
+            <x-nav-link href="{{ route('admin.location-settings') }}" :active="request()->routeIs('admin.location-settings')">
+              {{ __('Pengaturan Lokasi') }}
             </x-nav-link>
             <x-nav-link class="hidden md:inline-flex" href="{{ route('admin.attendances') }}" :active="request()->routeIs('admin.attendances')">
               {{ __('Attendance') }}
@@ -69,9 +69,32 @@
                 </x-dropdown-link>
               </x-slot>
             </x-nav-dropdown>
+            <x-nav-dropdown :active="request()->routeIs('admin.payroll.*')" triggerClasses="text-nowrap">
+              <x-slot name="trigger">
+                {{ __('Payroll') }}
+                <x-heroicon-o-chevron-down class="ms-2 h-5 w-5 text-gray-400" />
+              </x-slot>
+              <x-slot name="content">
+                <x-dropdown-link href="{{ route('admin.payroll.index') }}" :active="request()->routeIs('admin.payroll.index')">
+                  {{ __('Dashboard') }}
+                </x-dropdown-link>
+                <x-dropdown-link href="{{ route('admin.payroll.salary-components') }}" :active="request()->routeIs('admin.payroll.salary-components')">
+                  {{ __('Master Komponen') }}
+                </x-dropdown-link>
+                <x-dropdown-link href="{{ route('admin.payroll.employee-salaries') }}" :active="request()->routeIs('admin.payroll.employee-salaries')">
+                  {{ __('Setting Gaji') }}
+                </x-dropdown-link>
+                <x-dropdown-link href="{{ route('admin.payroll.generate') }}" :active="request()->routeIs('admin.payroll.generate')">
+                  {{ __('Generate Payroll') }}
+                </x-dropdown-link>
+              </x-slot>
+            </x-nav-dropdown>
           @else
             <x-nav-link href="{{ route('home') }}" :active="request()->routeIs('home')">
               {{ __('Home') }}
+            </x-nav-link>
+            <x-nav-link href="{{ route('payroll.index') }}" :active="request()->routeIs('payroll.*')">
+              {{ __('Riwayat Gaji') }}
             </x-nav-link>
           @endif
         </div>
@@ -162,8 +185,8 @@
         <x-responsive-nav-link href="{{ route('admin.dashboard') }}" :active="request()->routeIs('admin.dashboard')">
           {{ __('Dashboard') }}
         </x-responsive-nav-link>
-        <x-responsive-nav-link href="{{ route('admin.barcodes') }}" :active="request()->routeIs('admin.barcodes')">
-          {{ __('Barcode') }}
+        <x-responsive-nav-link href="{{ route('admin.location-settings') }}" :active="request()->routeIs('admin.location-settings')">
+          {{ __('Pengaturan Lokasi') }}
         </x-responsive-nav-link>
         <x-responsive-nav-link href="{{ route('admin.attendances') }}" :active="request()->routeIs('admin.attendances')">
           {{ __('Attendance') }}
@@ -192,9 +215,15 @@
         <x-responsive-nav-link href="{{ route('admin.import-export.attendances') }}" :active="request()->routeIs('admin.import-export')">
           Import & Export Absensi
         </x-responsive-nav-link>
+        <x-responsive-nav-link href="{{ route('admin.payroll.index') }}" :active="request()->routeIs('admin.payroll.*')">
+          {{ __('Payroll') }}
+        </x-responsive-nav-link>
       @else
         <x-responsive-nav-link href="{{ route('home') }}" :active="request()->routeIs('home')">
           {{ __('Home') }}
+        </x-responsive-nav-link>
+        <x-responsive-nav-link href="{{ route('payroll.index') }}" :active="request()->routeIs('payroll.*')">
+          {{ __('Riwayat Gaji') }}
         </x-responsive-nav-link>
       @endif
     </div>
