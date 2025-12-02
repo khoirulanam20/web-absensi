@@ -30,18 +30,29 @@ class DashboardComponent extends Component
             });
 
         $employeesCount = User::where('group', 'user')->count();
-        $presentCount = $attendances->where(fn ($attendance) => $attendance->status === 'present')->count();
+        
+        // Count by new status (hadir, izin, sakit, cuti) and also support old status (present, late, excused, sick) for backward compatibility
+        $presentCount = $attendances->where(fn ($attendance) => in_array($attendance->status, ['hadir', 'present']))->count();
         $lateCount = $attendances->where(fn ($attendance) => $attendance->status === 'late')->count();
-        $excusedCount = $attendances->where(fn ($attendance) => $attendance->status === 'excused')->count();
-        $sickCount = $attendances->where(fn ($attendance) => $attendance->status === 'sick')->count();
-        $absentCount = $employeesCount - ($presentCount + $lateCount + $excusedCount + $sickCount);
+        
+        // Izin includes both 'izin' and 'cuti' status
+        $izinCount = $attendances->where(fn ($attendance) => in_array($attendance->status, ['izin', 'cuti', 'excused']))->count();
+        
+        $sickCount = $attendances->where(fn ($attendance) => in_array($attendance->status, ['sakit', 'sick']))->count();
+        
+        // Count employees who have attendance record today (any status)
+        $employeesWithAttendance = $attendances->pluck('user_id')->unique()->count();
+        
+        // Absent = total employees - employees who have attendance record (regardless of status)
+        // This means employees who haven't checked in at all today
+        $absentCount = max(0, $employeesCount - $employeesWithAttendance);
 
         return view('livewire.admin.dashboard', [
             'employees' => $employees,
             'employeesCount' => $employeesCount,
             'presentCount' => $presentCount,
             'lateCount' => $lateCount,
-            'excusedCount' => $excusedCount,
+            'izinCount' => $izinCount,
             'sickCount' => $sickCount,
             'absentCount' => $absentCount,
         ]);

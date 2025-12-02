@@ -268,6 +268,18 @@ class UserForm extends Form
         // Delete leave requests (already has cascade, but delete explicitly for safety)
         LeaveRequest::where('user_id', $this->user->id)->delete();
         
+        // Delete payroll details first (because payroll_details has foreign key to payrolls)
+        $payrollIds = \App\Models\Payroll::where('user_id', $this->user->id)->pluck('id');
+        if ($payrollIds->isNotEmpty()) {
+            \App\Models\PayrollDetail::whereIn('payroll_id', $payrollIds)->delete();
+        }
+        
+        // Delete payrolls
+        \App\Models\Payroll::where('user_id', $this->user->id)->delete();
+        
+        // Delete employee salaries
+        \App\Models\EmployeeSalary::where('user_id', $this->user->id)->delete();
+        
         // Delete employee details (already has cascade, but delete explicitly for safety)
         if ($this->user->employeeDetail) {
             $this->user->employeeDetail->delete();

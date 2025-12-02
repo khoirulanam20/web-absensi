@@ -2,8 +2,23 @@
   <div class="px-6 py-4">
     @if ($currentAttendance)
       @php
-        $isExcused = $currentAttendance['status'] == 'excused' || $currentAttendance['status'] == 'sick';
+        // Support both new status (hadir, izin, sakit, cuti) and old status (present, late, excused, sick) for backward compatibility
+        $status = $currentAttendance['status'] ?? '';
+        $isExcused = in_array($status, ['izin', 'cuti', 'excused', 'sakit', 'sick']);
         $showMap = $currentAttendance['latitude'] && $currentAttendance['longitude'] && !$isExcused;
+        
+        $statusLabels = [
+          'hadir' => 'Hadir',
+          'present' => 'Hadir',
+          'late' => 'Terlambat',
+          'izin' => 'Izin',
+          'cuti' => 'Cuti',
+          'excused' => 'Izin',
+          'sakit' => 'Sakit',
+          'sick' => 'Sakit',
+          'absent' => 'Tidak Hadir'
+        ];
+        $displayStatus = $statusLabels[$status] ?? ucfirst($status);
       @endphp
       <h3 class="mb-3 text-xl font-semibold dark:text-white">{{ $currentAttendance['name'] }}</h3>
       <div class="mb-3 w-full">
@@ -19,7 +34,7 @@
         <div class="w-full">
           <x-label for="status" value="{{ __('Status') }}"></x-label>
           <x-input type="text" class="w-full" id="status" disabled
-            value="{{ __($currentAttendance['status']) }}"></x-input>
+            value="{{ $displayStatus }}"></x-input>
         </div>
       </div>
       @if ($isExcused)

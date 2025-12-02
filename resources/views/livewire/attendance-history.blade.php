@@ -28,7 +28,7 @@
       @php
         $presentCount = 0;
         $lateCount = 0;
-        $excusedCount = 0;
+        $izinCount = 0;
         $sickCount = 0;
         $absentCount = 0;
       @endphp
@@ -36,43 +36,52 @@
         @php
           $isWeekend = $date->isWeekend();
           $attendance = $attendances->firstWhere(fn($v, $k) => $v['date'] === $date->format('Y-m-d'));
-          $status = ($attendance ?? [
-              'status' => $isWeekend || !$date->isPast() ? '-' : 'absent',
-          ])['status'];
+          $status = $attendance ? $attendance['status'] : ($isWeekend || !$date->isPast() ? '-' : 'absent');
 
+          // Support both new status (hadir, izin, sakit, cuti) and old status (present, late, excused, sick) for backward compatibility
           switch ($status) {
+              case 'hadir':
               case 'present':
                   $shortStatus = 'H';
+                  $displayStatus = 'Hadir';
                   $bgColor =
                       'bg-green-200 dark:bg-green-800 hover:bg-green-300 dark:hover:bg-green-700 border border-green-600';
                   $presentCount++;
                   break;
               case 'late':
                   $shortStatus = 'T';
+                  $displayStatus = 'Terlambat';
                   $bgColor =
                       'bg-amber-200 dark:bg-amber-800 hover:bg-amber-300 dark:hover:bg-amber-700 border border-amber-600';
                   $lateCount++;
                   break;
+              case 'izin':
+              case 'cuti':
               case 'excused':
-                  $shortStatus = 'I';
+                  $shortStatus = $status === 'cuti' ? 'C' : 'I';
+                  $displayStatus = ucfirst($status);
                   $bgColor =
                       'bg-blue-200 dark:bg-blue-800 hover:bg-blue-300 dark:hover:bg-blue-700 border border-blue-600';
-                  $excusedCount++;
+                  $izinCount++;
                   break;
+              case 'sakit':
               case 'sick':
                   $shortStatus = 'S';
+                  $displayStatus = 'Sakit';
                   $bgColor =
                       'bg-purple-200 dark:bg-purple-950 hover:bg-purple-100 dark:hover:bg-purple-700 border border-purple-600';
                   $sickCount++;
                   break;
               case 'absent':
                   $shortStatus = 'A';
+                  $displayStatus = 'Tidak Hadir';
                   $bgColor =
                       'bg-red-200 dark:bg-red-950 text-red-500 dark:text-red-200 border border-red-300 dark:border-red-700';
                   $absentCount++;
                   break;
               default:
                   $shortStatus = '-';
+                  $displayStatus = '-';
                   $bgColor =
                       'bg-slate-200 text-slate-600 dark:text-slate-200 dark:bg-slate-800 border border-gray-400 dark:border-gray-700';
                   break;
@@ -116,7 +125,7 @@
       <div
         class="flex items-center justify-between rounded-md bg-blue-200 px-4 py-2 text-gray-800 dark:bg-blue-900 dark:text-white dark:shadow-gray-700">
         <div>
-          <h4 class="text-lg font-semibold md:text-xl">Izin: {{ $excusedCount }}</h4>
+          <h4 class="text-lg font-semibold md:text-xl">Izin: {{ $izinCount }}</h4>
         </div>
       </div>
       <div

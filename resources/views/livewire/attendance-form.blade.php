@@ -39,7 +39,7 @@
       <div class="p-6">
         <div class="flex items-center justify-between mb-4">
           <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">
-            {{ __('Status Kehadiran Hari Ini') }}
+            {{ __('Status Kehadiran') }}
           </h3>
           <span class="text-sm text-gray-600 dark:text-gray-400">
             {{ Carbon::now()->format('d/m/Y H:i') }}
@@ -185,8 +185,7 @@
                 </p>
               </div>
               <button
-                wire:click="checkOut"
-                wire:confirm="{{ __('Apakah Anda yakin ingin Check Out?') }}"
+                wire:click="openCheckOutModal"
                 class="inline-flex items-center px-6 py-3 bg-red-600 border border-transparent rounded-md font-semibold text-base text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">
                 <x-heroicon-o-arrow-right-on-rectangle class="mr-2 h-5 w-5" />
                 {{ __('Check Out') }}
@@ -204,6 +203,16 @@
                 {{ __('Masuk') }}: {{ $attendance->time_in ? Carbon::parse($attendance->time_in)->format('H:i:s') : '-' }}
                 | {{ __('Keluar') }}: {{ $attendance->time_out ? Carbon::parse($attendance->time_out)->format('H:i:s') : '-' }}
               </p>
+              @if ($attendance->notes)
+                <div class="mt-3 p-3 bg-green-50 dark:bg-green-800 rounded-lg text-left">
+                  <p class="text-xs font-medium text-green-600 dark:text-green-300 mb-1">
+                    {{ __('Catatan') }}:
+                  </p>
+                  <p class="text-sm text-green-800 dark:text-green-200 whitespace-pre-line">
+                    {{ $attendance->notes }}
+                  </p>
+                </div>
+              @endif
             </div>
           </div>
         @endif
@@ -324,6 +333,59 @@
           wire:loading.attr="disabled"
           class="ml-3 bg-green-600 hover:bg-green-700">
           {{ __('Check In') }}
+        </x-button>
+      </x-slot>
+    </x-dialog-modal>
+  @endif
+
+  <!-- Check Out Modal -->
+  @if ($showCheckOutModal)
+    <x-dialog-modal wire:model="showCheckOutModal">
+      <x-slot name="title">
+        {{ __('Form Check Out') }}
+      </x-slot>
+
+      <x-slot name="content">
+        <div class="space-y-4">
+          <div class="p-4 bg-blue-50 dark:bg-blue-900 border border-blue-200 dark:border-blue-700 rounded-lg">
+            <p class="text-sm text-blue-800 dark:text-blue-200">
+              <strong>{{ __('Masuk') }}:</strong> {{ $attendance->time_in ? Carbon::parse($attendance->time_in)->format('H:i:s') : '-' }}
+            </p>
+            @if ($attendance->notes)
+              <p class="text-sm text-blue-700 dark:text-blue-300 mt-2">
+                <strong>{{ __('Catatan Check In') }}:</strong> {{ $attendance->notes }}
+              </p>
+            @endif
+          </div>
+
+          <div>
+            <x-label for="checkOutNotes" value="{{ __('Catatan Check Out') }}" />
+            <x-textarea 
+              id="checkOutNotes" 
+              class="mt-1 block w-full" 
+              wire:model="checkOutNotes" 
+              rows="4"
+              placeholder="Tambahkan catatan untuk check out (opsional). Contoh: Menyelesaikan laporan harian, meeting dengan klien, dll." />
+            @error('checkOutNotes')
+              <x-input-error for="checkOutNotes" class="mt-2" message="{{ $message }}" />
+            @enderror
+            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+              Catatan ini akan ditambahkan ke catatan yang sudah ada dari check in.
+            </p>
+          </div>
+        </div>
+      </x-slot>
+
+      <x-slot name="footer">
+        <x-secondary-button wire:click="closeCheckOutModal" wire:loading.attr="disabled">
+          {{ __('Batal') }}
+        </x-secondary-button>
+
+        <x-button
+          wire:click="checkOut"
+          wire:loading.attr="disabled"
+          class="ml-3 bg-red-600 hover:bg-red-700">
+          {{ __('Check Out') }}
         </x-button>
       </x-slot>
     </x-dialog-modal>

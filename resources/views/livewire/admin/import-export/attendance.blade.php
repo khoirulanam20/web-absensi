@@ -148,10 +148,10 @@
                     'present' => 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300',
                     'late' => 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300',
                     'izin' => 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300',
+                    'cuti' => 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300',
                     'excused' => 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300',
-                    'sakit' => 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300',
-                    'sick' => 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300',
-                    'cuti' => 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300',
+                    'sakit' => 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300',
+                    'sick' => 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300',
                     'absent' => 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300',
                   ];
                   $statusColor = $statusColors[$attendance->status] ?? 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300';
@@ -161,7 +161,7 @@
                 </span>
               </td>
               <td class="{{ $tdClass }}">
-                @if ($attendance->status === 'hadir' || $attendance->status === 'present')
+                @if (in_array($attendance->status, ['hadir', 'present', 'late']))
                   @if ($attendance->is_wfh)
                     <span class="inline-flex items-center px-2 py-1 text-xs font-semibold rounded-full bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300">
                       <x-heroicon-o-home class="mr-1 h-3 w-3" />

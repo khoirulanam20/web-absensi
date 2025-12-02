@@ -20,7 +20,7 @@
       <span>Terlambat: {{ $lateCount }}</span>
     </div>
     <div class="rounded-md bg-blue-200 px-8 py-4 text-gray-800 dark:bg-blue-900 dark:text-white dark:shadow-gray-700">
-      <span class="text-2xl font-semibold md:text-3xl">Izin: {{ $excusedCount }}</span><br>
+      <span class="text-2xl font-semibold md:text-3xl">Izin: {{ $izinCount }}</span><br>
       <span>Izin/Cuti</span>
     </div>
     <div
@@ -74,39 +74,49 @@
         @foreach ($employees as $employee)
           @php
             $attendance = $employee->attendance;
-            $timeIn = $attendance ? $attendance?->time_in?->format('H:i:s') : null;
-            $timeOut = $attendance ? $attendance?->time_out?->format('H:i:s') : null;
+            $timeIn = $attendance ? ($attendance->time_in ? \Carbon\Carbon::parse($attendance->time_in)->format('H:i:s') : null) : null;
+            $timeOut = $attendance ? ($attendance->time_out ? \Carbon\Carbon::parse($attendance->time_out)->format('H:i:s') : null) : null;
             $isWeekend = $date->isWeekend();
-            $status = ($attendance ?? [
-                'status' => $isWeekend || !$date->isPast() ? '-' : 'absent',
-            ])['status'];
+            $status = $attendance ? $attendance->status : ($isWeekend || !$date->isPast() ? '-' : 'absent');
+            
+            // Support both new status (hadir, izin, sakit, cuti) and old status (present, late, excused, sick) for backward compatibility
             switch ($status) {
+                case 'hadir':
                 case 'present':
                     $shortStatus = 'H';
+                    $displayStatus = 'Hadir';
                     $bgColor =
                         'bg-green-200 dark:bg-green-800 hover:bg-green-300 dark:hover:bg-green-700 border border-green-300 dark:border-green-600';
                     break;
                 case 'late':
                     $shortStatus = 'T';
+                    $displayStatus = 'Terlambat';
                     $bgColor =
                         'bg-amber-200 dark:bg-amber-800 hover:bg-amber-300 dark:hover:bg-amber-700 border border-amber-300 dark:border-amber-600';
                     break;
+                case 'izin':
+                case 'cuti':
                 case 'excused':
-                    $shortStatus = 'I';
+                    $shortStatus = $status === 'cuti' ? 'C' : 'I';
+                    $displayStatus = ucfirst($status);
                     $bgColor =
                         'bg-blue-200 dark:bg-blue-800 hover:bg-blue-300 dark:hover:bg-blue-700 border border-blue-300 dark:border-blue-600';
                     break;
+                case 'sakit':
                 case 'sick':
                     $shortStatus = 'S';
-                    $bgColor = 'hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-300 dark:border-gray-600';
+                    $displayStatus = 'Sakit';
+                    $bgColor = 'bg-purple-200 dark:bg-purple-800 hover:bg-purple-300 dark:hover:bg-purple-700 border border-purple-300 dark:border-purple-600';
                     break;
                 case 'absent':
                     $shortStatus = 'A';
+                    $displayStatus = 'Tidak Hadir';
                     $bgColor =
                         'bg-red-200 dark:bg-red-800 hover:bg-red-300 dark:hover:bg-red-700 border border-red-300 dark:border-red-600';
                     break;
                 default:
                     $shortStatus = '-';
+                    $displayStatus = '-';
                     $bgColor = 'hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-300 dark:border-gray-600';
                     break;
             }
@@ -132,7 +142,7 @@
             {{-- Absensi --}}
             <td
               class="{{ $bgColor }} text-nowrap px-1 py-3 text-center text-sm font-medium text-gray-900 dark:text-white">
-              {{ __($status) }}
+              {{ $displayStatus }}
             </td>
 
             {{-- Waktu masuk/keluar --}}

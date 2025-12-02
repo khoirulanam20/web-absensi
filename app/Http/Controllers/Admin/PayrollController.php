@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Payroll;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PayrollController extends Controller
 {
@@ -60,10 +61,15 @@ class PayrollController extends Controller
             abort(403, 'Payroll ini belum dipublish.');
         }
 
-        // TODO: Implement PDF generation using DomPDF or similar
-        // For now, return view with proper headers for PDF
-        return response()
-            ->view('admin.payroll.pdf', ['payroll' => $payroll])
-            ->header('Content-Type', 'text/html; charset=utf-8');
+        // Generate PDF using DomPDF
+        $pdf = Pdf::loadView('admin.payroll.pdf', ['payroll' => $payroll]);
+        
+        // Set filename (sanitize untuk menghindari karakter tidak valid)
+        $userName = preg_replace('/[^a-zA-Z0-9_-]/', '_', $payroll->user->name);
+        $period = \Carbon\Carbon::parse($payroll->period . '-01')->format('F_Y');
+        $filename = 'Slip_Gaji_' . $userName . '_' . $period . '.pdf';
+        
+        // Return PDF as download
+        return $pdf->download($filename);
     }
 }

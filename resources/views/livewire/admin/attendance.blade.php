@@ -169,7 +169,7 @@
             @php
               $presentCount = 0;
               $lateCount = 0;
-              $excusedCount = 0;
+              $izinCount = 0;
               $sickCount = 0;
               $absentCount = 0;
             @endphp
@@ -177,42 +177,52 @@
               @php
                 $isWeekend = $date->isWeekend();
                 $attendance = $attendances->firstWhere(fn($v, $k) => $v['date'] === $date->format('Y-m-d'));
-                $status = ($attendance ?? [
-                    'status' => $isWeekend || !$date->isPast() ? '-' : 'absent',
-                ])['status'];
+                $status = $attendance ? $attendance['status'] : ($isWeekend || !$date->isPast() ? '-' : 'absent');
+                
+                // Support both new status (hadir, izin, sakit, cuti) and old status (present, late, excused, sick) for backward compatibility
                 switch ($status) {
+                    case 'hadir':
                     case 'present':
                         $shortStatus = 'H';
+                        $displayStatus = 'Hadir';
                         $bgColor =
                             'bg-green-200 dark:bg-green-800 hover:bg-green-300 dark:hover:bg-green-700 border border-green-300 dark:border-green-600';
                         $presentCount++;
                         break;
                     case 'late':
                         $shortStatus = 'T';
+                        $displayStatus = 'Terlambat';
                         $bgColor =
                             'bg-amber-200 dark:bg-amber-800 hover:bg-amber-300 dark:hover:bg-amber-700 border border-amber-300 dark:border-amber-600';
                         $lateCount++;
                         break;
+                    case 'izin':
+                    case 'cuti':
                     case 'excused':
-                        $shortStatus = 'I';
+                        $shortStatus = $status === 'cuti' ? 'C' : 'I';
+                        $displayStatus = ucfirst($status);
                         $bgColor =
                             'bg-blue-200 dark:bg-blue-800 hover:bg-blue-300 dark:hover:bg-blue-700 border border-blue-300 dark:border-blue-600';
-                        $excusedCount++;
+                        $izinCount++;
                         break;
+                    case 'sakit':
                     case 'sick':
                         $shortStatus = 'S';
+                        $displayStatus = 'Sakit';
                         $bgColor =
-                            'hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-300 dark:border-gray-600';
+                            'bg-purple-200 dark:bg-purple-800 hover:bg-purple-300 dark:hover:bg-purple-700 border border-purple-300 dark:border-purple-600';
                         $sickCount++;
                         break;
                     case 'absent':
                         $shortStatus = 'A';
+                        $displayStatus = 'Tidak Hadir';
                         $bgColor =
                             'bg-red-200 dark:bg-red-800 hover:bg-red-300 dark:hover:bg-red-700 border border-red-300 dark:border-red-600';
                         $absentCount++;
                         break;
                     default:
                         $shortStatus = '-';
+                        $displayStatus = '-';
                         $bgColor =
                             'hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-300 dark:border-gray-600';
                         break;
@@ -223,7 +233,7 @@
                   class="{{ $bgColor }} cursor-pointer text-center text-sm font-medium text-gray-900 dark:text-white">
                   <button class="w-full px-1 py-3" wire:click="show({{ $attendance['id'] }})"
                     onclick="setLocation({{ $attendance['lat'] ?? 0 }}, {{ $attendance['lng'] ?? 0 }})">
-                    {{ $isPerDayFilter ? __($status) : $shortStatus }}
+                    {{ $isPerDayFilter ? $displayStatus : $shortStatus }}
                   </button>
                 </td>
               @else
@@ -248,7 +258,7 @@
                     $isWfh = $attendance['is_wfh'] ?? false;
                     $status = $attendance['status'] ?? null;
                   @endphp
-                  @if ($status === 'hadir' || $status === 'present' || $status === 'late')
+                  @if (in_array($status, ['hadir', 'present', 'late']))
                     @if ($isWfh)
                       <span class="inline-flex items-center px-2 py-1 text-xs font-semibold rounded-full bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300">
                         <x-heroicon-o-home class="mr-1 h-3 w-3" />
@@ -271,7 +281,7 @@
 
             {{-- Total --}}
             @if (!$isPerDayFilter)
-              @foreach ([$presentCount, $lateCount, $excusedCount, $sickCount, $absentCount] as $statusCount)
+              @foreach ([$presentCount, $lateCount, $izinCount, $sickCount, $absentCount] as $statusCount)
                 <td
                   class="cursor-pointer border border-gray-300 px-1 py-3 text-center text-sm font-medium text-gray-900 group-hover:bg-gray-100 dark:border-gray-600 dark:text-white dark:group-hover:bg-gray-700">
                   {{ $statusCount }}

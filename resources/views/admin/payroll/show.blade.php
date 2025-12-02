@@ -108,9 +108,11 @@
         </div>
 
         <div class="mt-6 flex gap-3">
-          <x-button href="{{ Auth::user()->isAdmin ? route('admin.payroll.pdf', $payroll->id) : route('payroll.pdf', $payroll->id) }}" target="_blank">
-            Download PDF
-          </x-button>
+          <a href="{{ Auth::user()->isAdmin ? route('admin.payroll.pdf', $payroll->id) : route('payroll.pdf', $payroll->id) }}" download>
+            <x-button type="button">
+              Download PDF
+            </x-button>
+          </a>
           <x-secondary-button onclick="window.print()">
             Print
           </x-secondary-button>

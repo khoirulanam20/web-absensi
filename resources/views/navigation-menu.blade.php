@@ -25,6 +25,26 @@
             <x-nav-link class="hidden md:inline-flex" href="{{ route('admin.employees') }}" :active="request()->routeIs('admin.employees')">
               {{ __('Employee') }}
             </x-nav-link>
+            <x-nav-dropdown :active="request()->routeIs('admin.payroll.*')" triggerClasses="text-nowrap">
+              <x-slot name="trigger">
+                {{ __('Payroll') }}
+                <x-heroicon-o-chevron-down class="ms-2 h-5 w-5 text-gray-400" />
+              </x-slot>
+              <x-slot name="content">
+                <x-dropdown-link href="{{ route('admin.payroll.index') }}" :active="request()->routeIs('admin.payroll.index')">
+                  {{ __('Dashboard') }}
+                </x-dropdown-link>
+                <x-dropdown-link href="{{ route('admin.payroll.salary-components') }}" :active="request()->routeIs('admin.payroll.salary-components')">
+                  {{ __('Master Komponen') }}
+                </x-dropdown-link>
+                <x-dropdown-link href="{{ route('admin.payroll.employee-salaries') }}" :active="request()->routeIs('admin.payroll.employee-salaries')">
+                  {{ __('Setting Gaji') }}
+                </x-dropdown-link>
+                <x-dropdown-link href="{{ route('admin.payroll.generate') }}" :active="request()->routeIs('admin.payroll.generate')">
+                  {{ __('Generate Payroll') }}
+                </x-dropdown-link>
+              </x-slot>
+            </x-nav-dropdown>
             <x-nav-dropdown :active="request()->routeIs('admin.masters.*')" triggerClasses="text-nowrap">
               <x-slot name="trigger">
                 {{ __('Master Data') }}
@@ -69,26 +89,7 @@
                 </x-dropdown-link>
               </x-slot>
             </x-nav-dropdown>
-            <x-nav-dropdown :active="request()->routeIs('admin.payroll.*')" triggerClasses="text-nowrap">
-              <x-slot name="trigger">
-                {{ __('Payroll') }}
-                <x-heroicon-o-chevron-down class="ms-2 h-5 w-5 text-gray-400" />
-              </x-slot>
-              <x-slot name="content">
-                <x-dropdown-link href="{{ route('admin.payroll.index') }}" :active="request()->routeIs('admin.payroll.index')">
-                  {{ __('Dashboard') }}
-                </x-dropdown-link>
-                <x-dropdown-link href="{{ route('admin.payroll.salary-components') }}" :active="request()->routeIs('admin.payroll.salary-components')">
-                  {{ __('Master Komponen') }}
-                </x-dropdown-link>
-                <x-dropdown-link href="{{ route('admin.payroll.employee-salaries') }}" :active="request()->routeIs('admin.payroll.employee-salaries')">
-                  {{ __('Setting Gaji') }}
-                </x-dropdown-link>
-                <x-dropdown-link href="{{ route('admin.payroll.generate') }}" :active="request()->routeIs('admin.payroll.generate')">
-                  {{ __('Generate Payroll') }}
-                </x-dropdown-link>
-              </x-slot>
-            </x-nav-dropdown>
+            
           @else
             <x-nav-link href="{{ route('home') }}" :active="request()->routeIs('home')">
               {{ __('Home') }}

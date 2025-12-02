@@ -27,6 +27,8 @@ class AttendanceForm extends Component
     public $latitude = null;
     public $longitude = null;
     public $showModal = false;
+    public $showCheckOutModal = false;
+    public $checkOutNotes = '';
 
     public function mount()
     {
@@ -180,24 +182,79 @@ class AttendanceForm extends Component
         $this->dispatch('attendance-updated');
     }
 
-    public function checkOut()
+    public function openCheckOutModal()
     {
         if (!$this->attendance) {
             $this->addError('attendance', 'Tidak ada data absensi masuk.');
             return;
         }
 
+        // Reset check out notes (jangan load notes yang sudah ada, biarkan user input baru)
+        $this->checkOutNotes = '';
+        $this->showCheckOutModal = true;
+    }
+
+    public function closeCheckOutModal()
+    {
+        $this->showCheckOutModal = false;
+        $this->checkOutNotes = '';
+    }
+
+    public function checkOut()
+    {
+        // Ensure checkOutNotes is initialized
+        if (!isset($this->checkOutNotes)) {
+            $this->checkOutNotes = '';
+        }
+
+        // Reload attendance to ensure it's fresh
+        $attendance = Attendance::where('user_id', Auth::user()->id)
+            ->where('date', date('Y-m-d'))
+            ->first();
+
+        if (!$attendance) {
+            $this->addError('attendance', 'Tidak ada data absensi masuk.');
+            $this->showCheckOutModal = false;
+            return;
+        }
+
+        // Manual validation instead of using $this->validate()
+        $checkOutNotes = $this->checkOutNotes ?? '';
+        if (strlen($checkOutNotes) > 500) {
+            $this->addError('checkOutNotes', 'Catatan maksimal 500 karakter.');
+            return;
+        }
+
         $now = Carbon::now();
         $timeOut = $now->format('H:i:s');
 
-        $this->attendance->update([
+        // Update notes: jika sudah ada notes dari check-in, gabungkan dengan notes checkout
+        $existingNotes = $attendance->notes ?? '';
+        $updatedNotes = '';
+        
+        if ($existingNotes && $checkOutNotes) {
+            // Jika ada notes check-in dan check-out, gabungkan dengan separator
+            $updatedNotes = $existingNotes . "\n\n--- Check Out ---\n" . trim($checkOutNotes);
+        } elseif ($checkOutNotes) {
+            // Jika hanya ada notes check-out
+            $updatedNotes = '[Check Out] ' . trim($checkOutNotes);
+        } else {
+            // Jika tidak ada notes baru, tetap gunakan notes yang sudah ada
+            $updatedNotes = $existingNotes;
+        }
+
+        $attendance->update([
             'time_out' => $timeOut,
+            'notes' => $updatedNotes ?: null,
+            'note' => $updatedNotes ?: null, // Keep for backward compatibility
         ]);
 
-        $this->attendance = $this->attendance->fresh();
+        $this->attendance = $attendance->fresh();
+        $this->showCheckOutModal = false;
+        $this->checkOutNotes = '';
         $this->successMsg = __('Attendance Out Successful');
         
-        Attendance::clearUserAttendanceCache(Auth::user(), Carbon::parse($this->attendance->date));
+        Attendance::clearUserAttendanceCache(Auth::user(), Carbon::parse($attendance->date));
         
         $this->dispatch('attendance-updated');
     }

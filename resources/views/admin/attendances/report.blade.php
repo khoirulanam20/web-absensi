@@ -157,49 +157,60 @@
           @php
             $presentCount = 0;
             $lateCount = 0;
-            $excusedCount = 0;
+            $izinCount = 0;
             $sickCount = 0;
             $absentCount = 0;
           @endphp
           @foreach ($dates as $date)
             @php
               $isWeekend = $date->isWeekend();
-              $status = ($attendances->firstWhere(fn($v, $k) => $v['date'] === $date->format('Y-m-d')) ?? [
-                  'status' => $isWeekend || !$date->isPast() ? '-' : 'absent',
-              ])['status'];
+              $attendance = $attendances->firstWhere(fn($v, $k) => $v['date'] === $date->format('Y-m-d'));
+              $status = $attendance ? $attendance['status'] : ($isWeekend || !$date->isPast() ? '-' : 'absent');
+              
+              // Support both new status (hadir, izin, sakit, cuti) and old status (present, late, excused, sick) for backward compatibility
               switch ($status) {
+                  case 'hadir':
                   case 'present':
                       $shortStatus = 'H';
+                      $displayStatus = 'Hadir';
                       $presentCount++;
                       break;
                   case 'late':
                       $shortStatus = 'T';
+                      $displayStatus = 'Terlambat';
                       $lateCount++;
                       break;
+                  case 'izin':
+                  case 'cuti':
                   case 'excused':
-                      $shortStatus = 'I';
-                      $excusedCount++;
+                      $shortStatus = $status === 'cuti' ? 'C' : 'I';
+                      $displayStatus = ucfirst($status);
+                      $izinCount++;
                       break;
+                  case 'sakit':
                   case 'sick':
                       $shortStatus = 'S';
+                      $displayStatus = 'Sakit';
                       $sickCount++;
                       break;
                   case 'absent':
                       $shortStatus = 'A';
+                      $displayStatus = 'Tidak Hadir';
                       $absentCount++;
                       break;
                   default:
                       $shortStatus = '-';
+                      $displayStatus = '-';
                       break;
               }
             @endphp
             <td style="padding: 0px; text-align: center;">
-              {{ $isPerDayFilter ? __($status) : $shortStatus }}
+              {{ $isPerDayFilter ? $displayStatus : $shortStatus }}
             </td>
           @endforeach
 
           @if (!$isPerDayFilter)
-            @foreach ([$presentCount, $lateCount, $excusedCount, $sickCount, $absentCount] as $statusCount)
+            @foreach ([$presentCount, $lateCount, $izinCount, $sickCount, $absentCount] as $statusCount)
               <td style=" text-align: center;">
                 {{ $statusCount }}
               </td>
