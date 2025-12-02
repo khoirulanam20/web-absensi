@@ -32,8 +32,12 @@ class DashboardComponent extends Component
         $employeesCount = User::where('group', 'user')->count();
         
         // Count by new status (hadir, izin, sakit, cuti) and also support old status (present, late, excused, sick) for backward compatibility
+        // Late is counted separately but also included in present count (hadir + late = total hadir)
         $presentCount = $attendances->where(fn ($attendance) => in_array($attendance->status, ['hadir', 'present']))->count();
         $lateCount = $attendances->where(fn ($attendance) => $attendance->status === 'late')->count();
+        
+        // Total hadir = hadir tepat waktu + terlambat
+        $totalHadir = $presentCount + $lateCount;
         
         // Izin includes both 'izin' and 'cuti' status
         $izinCount = $attendances->where(fn ($attendance) => in_array($attendance->status, ['izin', 'cuti', 'excused']))->count();
@@ -52,6 +56,7 @@ class DashboardComponent extends Component
             'employeesCount' => $employeesCount,
             'presentCount' => $presentCount,
             'lateCount' => $lateCount,
+            'totalHadir' => $totalHadir,
             'izinCount' => $izinCount,
             'sickCount' => $sickCount,
             'absentCount' => $absentCount,

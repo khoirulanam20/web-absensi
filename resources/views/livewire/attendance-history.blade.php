@@ -119,7 +119,7 @@
         class="flex flex-col items-start justify-center rounded-md bg-green-200 px-3 py-2 text-gray-800 dark:bg-green-900 dark:text-white dark:shadow-gray-700 sm:px-4">
         <div>
           <h4 class="text-sm font-semibold sm:text-base md:text-lg lg:text-xl">Hadir: {{ $presentCount + $lateCount }}</h4>
-          <p class="text-xs sm:text-sm">Terlambat: {{ $lateCount }}</p>
+          <p class="text-xs sm:text-sm">Tepat Waktu: {{ $presentCount }} | Terlambat: {{ $lateCount }}</p>
         </div>
       </div>
       <div

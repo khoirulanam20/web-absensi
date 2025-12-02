@@ -156,6 +156,22 @@ class AttendanceForm extends Component
         /** @var Shift */
         $shift = Shift::find($this->shift_id);
         
+        // Determine final status: if status is 'hadir' and check-in time is after shift start time, mark as 'late'
+        $finalStatus = $this->status;
+        if ($this->status === 'hadir' && $shift && $shift->start_time) {
+            $shiftStartTime = Carbon::parse($shift->start_time);
+            $checkInTime = Carbon::parse($timeIn);
+            
+            // Compare only time (ignore date)
+            $shiftStartToday = Carbon::today()->setTimeFromTimeString($shift->start_time);
+            $checkInToday = Carbon::today()->setTimeFromTimeString($timeIn);
+            
+            // If check-in time is after shift start time, mark as late
+            if ($checkInToday->gt($shiftStartToday)) {
+                $finalStatus = 'late';
+            }
+        }
+        
         // Create attendance record
         $isWfh = filter_var($this->is_wfh, FILTER_VALIDATE_BOOLEAN);
         $attendance = Attendance::create([
@@ -166,8 +182,8 @@ class AttendanceForm extends Component
             'shift_id' => $shift->id,
             'latitude' => doubleval($this->currentLiveCoords[0]),
             'longitude' => doubleval($this->currentLiveCoords[1]),
-            'status' => $this->status,
-            'is_wfh' => $this->status === 'hadir' ? $isWfh : false,
+            'status' => $finalStatus,
+            'is_wfh' => ($finalStatus === 'hadir' || $finalStatus === 'late') ? $isWfh : false,
             'notes' => $this->notes ?: null,
             'note' => $this->notes ?: null, // Keep for backward compatibility
         ]);

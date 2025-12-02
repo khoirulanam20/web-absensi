@@ -89,7 +89,7 @@
               </h4>
               <p class="text-lg font-semibold text-gray-900 dark:text-white">
                 {{ $statusLabel }}
-                @if ($attendance->is_wfh && in_array($attendance->status, ['hadir', 'present']))
+                @if ($attendance->is_wfh && in_array($attendance->status, ['hadir', 'present', 'late']))
                   <span class="text-xs">(WFH)</span>
                 @endif
               </p>
@@ -141,12 +141,18 @@
           <div class="text-center">
             @php
               $isLeaveStatus = in_array($attendance->status, ['izin', 'cuti', 'sakit']);
+              $isWorkingStatus = in_array($attendance->status, ['hadir', 'present', 'late']);
               $statusLabels = [
                 'izin' => 'IZIN',
                 'cuti' => 'CUTI',
                 'sakit' => 'SAKIT',
+                'late' => 'TERLAMBAT',
+                'hadir' => 'SEDANG BEKERJA',
+                'present' => 'SEDANG BEKERJA',
               ];
-              $statusLabel = $isLeaveStatus ? ($statusLabels[$attendance->status] ?? strtoupper($attendance->status)) : 'SEDANG BEKERJA';
+              $statusLabel = $isLeaveStatus 
+                ? ($statusLabels[$attendance->status] ?? strtoupper($attendance->status))
+                : ($statusLabels[$attendance->status] ?? 'SEDANG BEKERJA');
             @endphp
             
             @if ($isLeaveStatus)
@@ -169,14 +175,17 @@
                   </div>
                 @endif
               </div>
-            @else
-              <!-- Status Hadir - Bisa Check Out -->
-              <div class="mb-4 p-4 bg-yellow-100 dark:bg-yellow-900 border border-yellow-400 dark:border-yellow-700 rounded-lg">
-                <p class="text-yellow-800 dark:text-yellow-200 font-semibold">
-                  {{ __('Status: SEDANG BEKERJA') }}
+            @elseif ($isWorkingStatus)
+              <!-- Status Hadir/Late - Bisa Check Out -->
+              <div class="mb-4 p-4 {{ $attendance->status === 'late' ? 'bg-amber-100 dark:bg-amber-900 border-amber-400 dark:border-amber-700' : 'bg-yellow-100 dark:bg-yellow-900 border-yellow-400 dark:border-yellow-700' }} border rounded-lg">
+                <p class="{{ $attendance->status === 'late' ? 'text-amber-800 dark:text-amber-200' : 'text-yellow-800 dark:text-yellow-200' }} font-semibold">
+                  {{ __('Status: ') . $statusLabel }}
                 </p>
-                <p class="text-sm text-yellow-700 dark:text-yellow-300 mt-1">
+                <p class="text-sm {{ $attendance->status === 'late' ? 'text-amber-700 dark:text-amber-300' : 'text-yellow-700 dark:text-yellow-300' }} mt-1">
                   {{ __('Masuk') }}: {{ $attendance->time_in ? Carbon::parse($attendance->time_in)->format('H:i:s') : '-' }}
+                  @if ($attendance->shift && $attendance->status === 'late')
+                    | {{ __('Shift') }}: {{ Carbon::parse($attendance->shift->start_time)->format('H:i') }}
+                  @endif
                   @if ($attendance->is_wfh)
                     | {{ __('WFH: Ya') }}
                   @else

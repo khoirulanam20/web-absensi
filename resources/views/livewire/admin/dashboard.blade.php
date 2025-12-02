@@ -16,7 +16,7 @@
   </div>
   <div class="mb-4 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
     <div class="rounded-md bg-green-200 px-8 py-4 text-gray-800 dark:bg-green-900 dark:text-white dark:shadow-gray-700">
-      <span class="text-2xl font-semibold md:text-3xl">Hadir: {{ $presentCount }}</span><br>
+      <span class="text-2xl font-semibold md:text-3xl">Hadir: {{ $totalHadir }}</span><br>
       <span>Terlambat: {{ $lateCount }}</span>
     </div>
     <div class="rounded-md bg-blue-200 px-8 py-4 text-gray-800 dark:bg-blue-900 dark:text-white dark:shadow-gray-700">
