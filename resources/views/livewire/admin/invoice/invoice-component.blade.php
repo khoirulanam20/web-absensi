@@ -1,10 +1,10 @@
 <div>
-  <div class="mb-4 flex items-center justify-between">
-    <h3 class="text-lg font-semibold leading-tight text-gray-800 dark:text-gray-200">
+  <div class="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <h3 class="text-base sm:text-lg font-semibold leading-tight text-gray-800 dark:text-gray-200">
       Daftar Invoice
     </h3>
-    <x-button wire:click="showCreating">
-      <x-heroicon-o-plus class="mr-2 h-5 w-5" />
+    <x-button wire:click="showCreating" class="w-full sm:w-auto text-sm">
+      <x-heroicon-o-plus class="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
       Buat Invoice Baru
     </x-button>
   </div>
@@ -17,22 +17,22 @@
     <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
       <thead class="bg-gray-50 dark:bg-gray-800">
         <tr>
-          <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
+          <th class="px-3 py-2 sm:px-4 sm:py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
             Order Number
           </th>
-          <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
+          <th class="hidden sm:table-cell px-3 py-2 sm:px-4 sm:py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
             Recipient
           </th>
-          <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
+          <th class="hidden md:table-cell px-3 py-2 sm:px-4 sm:py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
             Invoice Date
           </th>
-          <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
+          <th class="px-3 py-2 sm:px-4 sm:py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
             Total
           </th>
-          <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
-            Payment Status
+          <th class="hidden sm:table-cell px-3 py-2 sm:px-4 sm:py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
+            Status
           </th>
-          <th class="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
+          <th class="px-3 py-2 sm:px-4 sm:py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
             Actions
           </th>
         </tr>
@@ -40,19 +40,19 @@
       <tbody class="divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-800">
         @foreach ($invoices as $invoice)
           <tr wire:key="{{ $invoice->id }}">
-            <td class="px-4 py-3 text-sm font-medium text-gray-900 dark:text-white">
+            <td class="px-3 py-3 sm:px-4 sm:py-3 text-xs sm:text-sm font-medium text-gray-900 dark:text-white">
               {{ $invoice->order_number }}
             </td>
-            <td class="px-4 py-3 text-sm text-gray-900 dark:text-white">
+            <td class="hidden sm:table-cell px-3 py-3 sm:px-4 sm:py-3 text-xs sm:text-sm text-gray-900 dark:text-white">
               {{ $invoice->recipient_name }}
             </td>
-            <td class="px-4 py-3 text-sm text-gray-900 dark:text-white">
+            <td class="hidden md:table-cell px-3 py-3 sm:px-4 sm:py-3 text-xs sm:text-sm text-gray-900 dark:text-white">
               {{ \Carbon\Carbon::parse($invoice->invoice_date)->format('d/m/Y') }}
             </td>
-            <td class="px-4 py-3 text-sm font-semibold text-gray-900 dark:text-white">
+            <td class="px-3 py-3 sm:px-4 sm:py-3 text-xs sm:text-sm font-semibold text-gray-900 dark:text-white">
               Rp {{ number_format((float) $invoice->total, 0, ',', '.') }}
             </td>
-            <td class="px-4 py-3 text-sm">
+            <td class="hidden sm:table-cell px-3 py-3 sm:px-4 sm:py-3 text-xs sm:text-sm">
               @php
                 $statusColors = [
                   'unpaid' => 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300',
@@ -69,18 +69,18 @@
                 {{ $statusLabels[$invoice->payment_status] ?? $invoice->payment_status }}
               </span>
             </td>
-            <td class="px-4 py-3 text-right text-sm font-medium">
-              <div class="flex items-center justify-end gap-2">
-                <x-button href="{{ route('admin.invoice.show', $invoice->id) }}" class="text-xs" target="_blank">
+            <td class="px-3 py-3 sm:px-4 sm:py-3 text-right text-xs sm:text-sm font-medium">
+              <div class="flex flex-col sm:flex-row items-end sm:items-center justify-end gap-1 sm:gap-2">
+                <x-button href="{{ route('admin.invoice.show', $invoice->id) }}" class="text-xs w-full sm:w-auto" target="_blank">
                   View
                 </x-button>
-                <x-button href="{{ route('admin.invoice.pdf', $invoice->id) }}" class="text-xs" download>
+                <x-button href="{{ route('admin.invoice.pdf', $invoice->id) }}" class="text-xs w-full sm:w-auto" download>
                   PDF
                 </x-button>
-                <x-secondary-button wire:click="showEditing({{ $invoice->id }})" class="text-xs">
+                <x-secondary-button wire:click="showEditing({{ $invoice->id }})" class="text-xs w-full sm:w-auto">
                   Edit
                 </x-secondary-button>
-                <x-danger-button wire:click="confirmDeletion({{ $invoice->id }}, '{{ $invoice->order_number }}')" class="text-xs">
+                <x-danger-button wire:click="confirmDeletion({{ $invoice->id }}, '{{ $invoice->order_number }}')" class="text-xs w-full sm:w-auto">
                   Delete
                 </x-danger-button>
               </div>
