@@ -128,6 +128,10 @@ Route::middleware([
             return view('admin.assets.index');
         })->name('admin.assets.index');
 
+        // Tools - Budget Calculator
+        Route::view('/tools/budget-calculator', 'admin.tools.budget-calculator')
+            ->name('admin.tools.budget-calculator');
+
         // Performance / KPI Management
         Route::get('/performance', function () {
             return view('admin.performance.index');
@@ -142,6 +146,12 @@ Route::middleware([
             return view('admin.performance.review');
         })->name('admin.performance.review');
     });
+});
+
+// Tools (accessible by semua user login, termasuk admin)
+Route::middleware(['auth'])->group(function () {
+    Route::view('/tools/prd-generator', 'tools.prd-generator')
+        ->name('tools.prd-generator');
 });
 
 // Performance Routes (accessible by users)

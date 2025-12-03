@@ -37,15 +37,24 @@
     @endif
 
     <!-- Page Content -->
-    <main class="{{ !Auth::check() ? '' : (Auth::user()->isAdmin ? 'pb-20' : 'pb-20') }}">
+    @auth
+      <main class="pb-20">
+        {{ $slot }}
+      </main>
+    @else
+      <main>
       {{ $slot }}
     </main>
+    @endauth
   </div>
 
   <!-- Bottom Navbar for Mobile -->
   @auth
+    @if (Auth::user()->isAdmin)
+      <x-bottom-navbar-admin />
+    @else
     <x-bottom-navbar />
-    <x-bottom-navbar-admin />
+    @endif
   @endauth
 
   @stack('modals')

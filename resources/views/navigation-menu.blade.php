@@ -13,18 +13,56 @@
         <!-- Navigation Links -->
         <div class="hidden space-x-2 sm:-my-px sm:ms-6 sm:flex md:ms-10 md:space-x-5 lg:space-x-8">
           @if (Auth::user()->isAdmin)
+            {{-- Menu utama yang sering dipakai --}}
             <x-nav-link href="{{ route('admin.dashboard') }}" :active="request()->routeIs('admin.dashboard')">
               {{ __('Dashboard') }}
             </x-nav-link>
-            <x-nav-link href="{{ route('admin.location-settings') }}" :active="request()->routeIs('admin.location-settings')">
-              {{ __('Pengaturan Lokasi') }}
-            </x-nav-link>
-            <x-nav-link class="hidden md:inline-flex" href="{{ route('admin.attendances') }}" :active="request()->routeIs('admin.attendances')">
-              {{ __('Attendance') }}
-            </x-nav-link>
-            <x-nav-link class="hidden md:inline-flex" href="{{ route('admin.employees') }}" :active="request()->routeIs('admin.employees')">
-              {{ __('Employee') }}
-            </x-nav-link>
+
+            {{-- Menu Karyawan --}}
+            <x-nav-dropdown :active="request()->routeIs('admin.employees') || request()->routeIs('admin.masters.division') || request()->routeIs('admin.masters.job-title') || request()->routeIs('admin.masters.education') || request()->routeIs('admin.import-export.users')" triggerClasses="text-nowrap">
+              <x-slot name="trigger">
+                {{ __('Karyawan') }}
+                <x-heroicon-o-chevron-down class="ms-2 h-5 w-5 text-gray-400" />
+              </x-slot>
+              <x-slot name="content">
+                <x-dropdown-link href="{{ route('admin.employees') }}" :active="request()->routeIs('admin.employees')">
+                  {{ __('Karyawan') }}
+                </x-dropdown-link>
+                <x-dropdown-link href="{{ route('admin.masters.division') }}" :active="request()->routeIs('admin.masters.division')">
+                  {{ __('Divisi') }}
+                </x-dropdown-link>
+                <x-dropdown-link href="{{ route('admin.masters.job-title') }}" :active="request()->routeIs('admin.masters.job-title')">
+                  {{ __('Jabatan') }}
+                </x-dropdown-link>
+                <x-dropdown-link href="{{ route('admin.masters.education') }}" :active="request()->routeIs('admin.masters.education')">
+                  {{ __('Pendidikan') }}
+                </x-dropdown-link>
+                <x-dropdown-link href="{{ route('admin.import-export.users') }}" :active="request()->routeIs('admin.import-export.users')">
+                  {{ __('Import & Export Karyawan/Admin') }}
+                </x-dropdown-link>
+              </x-slot>
+            </x-nav-dropdown>
+
+            {{-- Menu Absensi --}}
+            <x-nav-dropdown :active="request()->routeIs('admin.attendances') || request()->routeIs('admin.masters.shift') || request()->routeIs('admin.import-export.attendances')" triggerClasses="text-nowrap">
+              <x-slot name="trigger">
+                {{ __('Absensi') }}
+                <x-heroicon-o-chevron-down class="ms-2 h-5 w-5 text-gray-400" />
+              </x-slot>
+              <x-slot name="content">
+                <x-dropdown-link href="{{ route('admin.attendances') }}" :active="request()->routeIs('admin.attendances')">
+                  {{ __('Absensi') }}
+                </x-dropdown-link>
+                <x-dropdown-link href="{{ route('admin.masters.shift') }}" :active="request()->routeIs('admin.masters.shift')">
+                  {{ __('Shift') }}
+                </x-dropdown-link>
+                <x-dropdown-link href="{{ route('admin.import-export.attendances') }}" :active="request()->routeIs('admin.import-export.attendances')">
+                  {{ __('Import & Export Absensi') }}
+                </x-dropdown-link>
+              </x-slot>
+            </x-nav-dropdown>
+
+            {{-- Menu Payroll --}}
             <x-nav-dropdown :active="request()->routeIs('admin.payroll.*')" triggerClasses="text-nowrap">
               <x-slot name="trigger">
                 {{ __('Payroll') }}
@@ -32,7 +70,7 @@
               </x-slot>
               <x-slot name="content">
                 <x-dropdown-link href="{{ route('admin.payroll.index') }}" :active="request()->routeIs('admin.payroll.index')">
-                  {{ __('Dashboard') }}
+                  {{ __('Dashboard Payroll') }}
                 </x-dropdown-link>
                 <x-dropdown-link href="{{ route('admin.payroll.salary-components') }}" :active="request()->routeIs('admin.payroll.salary-components')">
                   {{ __('Master Komponen') }}
@@ -41,16 +79,17 @@
                   {{ __('Setting Gaji') }}
                 </x-dropdown-link>
                 <x-dropdown-link href="{{ route('admin.payroll.generate') }}" :active="request()->routeIs('admin.payroll.generate')">
-                  {{ __('Generate Payroll') }}
+                  {{ __('Generate Gaji') }}
                 </x-dropdown-link>
               </x-slot>
             </x-nav-dropdown>
+
+            {{-- Menu Invoice --}}
             <x-nav-link href="{{ route('admin.invoice.index') }}" :active="request()->routeIs('admin.invoice.*')">
               {{ __('Invoice') }}
             </x-nav-link>
-            <x-nav-link href="{{ route('admin.assets.index') }}" :active="request()->routeIs('admin.assets.*')">
-              {{ __('Aset') }}
-            </x-nav-link>
+
+            {{-- Performance / KPI --}}
             <x-nav-dropdown :active="request()->routeIs('admin.performance.*')" triggerClasses="text-nowrap">
               <x-slot name="trigger">
                 {{ __('Performance') }}
@@ -71,47 +110,37 @@
                 </x-dropdown-link>
               </x-slot>
             </x-nav-dropdown>
-            <x-nav-dropdown :active="request()->routeIs('admin.masters.*')" triggerClasses="text-nowrap">
+            
+            {{-- Lainnya --}}
+            <x-nav-dropdown :active="request()->routeIs('admin.masters.*') || request()->routeIs('admin.location-settings') || request()->routeIs('admin.assets.*') || request()->routeIs('admin.tools.*') || request()->routeIs('tools.prd-generator')" triggerClasses="text-nowrap">
               <x-slot name="trigger">
-                {{ __('Master Data') }}
+                {{ __('Lainnya') }}
                 <x-heroicon-o-chevron-down class="ms-2 h-5 w-5 text-gray-400" />
               </x-slot>
               <x-slot name="content">
-                <x-dropdown-link class="md:hidden" href="{{ route('admin.attendances') }}" :active="request()->routeIs('admin.attendances')">
-                  {{ __('Attendance') }}
+                {{-- Pengaturan Lokasi --}}
+                <x-dropdown-link href="{{ route('admin.location-settings') }}" :active="request()->routeIs('admin.location-settings')">
+                  {{ __('Pengaturan Lokasi') }}
                 </x-dropdown-link>
-                <x-dropdown-link class="md:hidden" href="{{ route('admin.employees') }}" :active="request()->routeIs('admin.employees')">
-                  {{ __('Employee') }}
-                </x-dropdown-link>
-                <x-dropdown-link href="{{ route('admin.masters.division') }}" :active="request()->routeIs('admin.masters.division')">
-                  {{ __('Division') }}
-                </x-dropdown-link>
-                <x-dropdown-link href="{{ route('admin.masters.job-title') }}" :active="request()->routeIs('admin.masters.job-title')">
-                  {{ __('Job Title') }}
-                </x-dropdown-link>
-                <x-dropdown-link href="{{ route('admin.masters.education') }}" :active="request()->routeIs('admin.masters.education')">
-                  {{ __('Education') }}
-                </x-dropdown-link>
-                <x-dropdown-link href="{{ route('admin.masters.shift') }}" :active="request()->routeIs('admin.masters.shift')">
-                  {{ __('Shift') }}
-                </x-dropdown-link>
-                <hr>
+                
+                {{-- Master Data --}}
                 <x-dropdown-link href="{{ route('admin.masters.admin') }}" :active="request()->routeIs('admin.masters.admin')">
                   {{ __('Admin') }}
                 </x-dropdown-link>
-              </x-slot>
-            </x-nav-dropdown>
-            <x-nav-dropdown :active="request()->routeIs('admin.import-export.*')" triggerClasses="text-nowrap">
-              <x-slot name="trigger">
-                {{ __('Import & Export') }}
-                <x-heroicon-o-chevron-down class="ms-2 h-5 w-5 text-gray-400" />
-              </x-slot>
-              <x-slot name="content">
-                <x-dropdown-link href="{{ route('admin.import-export.users') }}" :active="request()->routeIs('admin.import-export.users')">
-                  {{ __('Employee') }}/{{ __('Admin') }}
+                
+                {{-- Aset --}}
+                <x-dropdown-link href="{{ route('admin.assets.index') }}" :active="request()->routeIs('admin.assets.*')">
+                  {{ __('Aset') }}
                 </x-dropdown-link>
-                <x-dropdown-link href="{{ route('admin.import-export.attendances') }}" :active="request()->routeIs('admin.import-export.attendances')">
-                  {{ __('Attendance') }}
+
+                {{-- Budget Calculator --}}
+                <x-dropdown-link href="{{ route('admin.tools.budget-calculator') }}" :active="request()->routeIs('admin.tools.budget-calculator')">
+                  {{ __('Budget Calculator') }}
+                </x-dropdown-link>
+
+                {{-- PRD Generator --}}
+                <x-dropdown-link href="{{ route('tools.prd-generator') }}" :active="request()->routeIs('tools.prd-generator')">
+                  {{ __('PRD Generator') }}
                 </x-dropdown-link>
               </x-slot>
             </x-nav-dropdown>
@@ -147,6 +176,19 @@
                   {{ __('History Review') }}
                 </x-dropdown-link>
               @endif
+            </x-slot>
+          </x-nav-dropdown>
+
+          {{-- Lainnya (User) --}}
+          <x-nav-dropdown :active="request()->routeIs('tools.*')" triggerClasses="text-nowrap">
+            <x-slot name="trigger">
+              {{ __('Lainnya') }}
+              <x-heroicon-o-chevron-down class="ms-2 h-5 w-5 text-gray-400" />
+            </x-slot>
+            <x-slot name="content">
+              <x-dropdown-link href="{{ route('tools.prd-generator') }}" :active="request()->routeIs('tools.prd-generator')">
+                {{ __('PRD Generator') }}
+              </x-dropdown-link>
             </x-slot>
           </x-nav-dropdown>
         @endif
@@ -235,53 +277,96 @@
   <div :class="{ 'block': open, 'hidden': !open }" class="hidden sm:hidden">
     <div class="space-y-1 pb-3 pt-2">
       @if (Auth::user()->isAdmin)
+        {{-- Dashboard --}}
         <x-responsive-nav-link href="{{ route('admin.dashboard') }}" :active="request()->routeIs('admin.dashboard')">
           {{ __('Dashboard') }}
         </x-responsive-nav-link>
-        <x-responsive-nav-link href="{{ route('admin.location-settings') }}" :active="request()->routeIs('admin.location-settings')">
-          {{ __('Pengaturan Lokasi') }}
-        </x-responsive-nav-link>
-        <x-responsive-nav-link href="{{ route('admin.attendances') }}" :active="request()->routeIs('admin.attendances')">
-          {{ __('Attendance') }}
-        </x-responsive-nav-link>
+
+        {{-- Menu Karyawan --}}
+        <div class="mt-3 border-t border-gray-200 pt-2 text-xs font-semibold uppercase tracking-wide text-gray-400 dark:border-gray-600">
+          {{ __('Menu Karyawan') }}
+        </div>
         <x-responsive-nav-link href="{{ route('admin.employees') }}" :active="request()->routeIs('admin.employees')">
-          {{ __('Employee') }}
+          {{ __('Karyawan') }}
         </x-responsive-nav-link>
         <x-responsive-nav-link href="{{ route('admin.masters.division') }}" :active="request()->routeIs('admin.masters.division')">
-          {{ __('Division') }}
+          {{ __('Divisi') }}
         </x-responsive-nav-link>
         <x-responsive-nav-link href="{{ route('admin.masters.job-title') }}" :active="request()->routeIs('admin.masters.job-title')">
-          {{ __('Job Title') }}
+          {{ __('Jabatan') }}
         </x-responsive-nav-link>
         <x-responsive-nav-link href="{{ route('admin.masters.education') }}" :active="request()->routeIs('admin.masters.education')">
-          {{ __('Education') }}
+          {{ __('Pendidikan') }}
+        </x-responsive-nav-link>
+        <x-responsive-nav-link href="{{ route('admin.import-export.users') }}" :active="request()->routeIs('admin.import-export.users')">
+          {{ __('Import & Export Karyawan/Admin') }}
+        </x-responsive-nav-link>
+
+        {{-- Menu Absensi --}}
+        <div class="mt-3 border-t border-gray-200 pt-2 text-xs font-semibold uppercase tracking-wide text-gray-400 dark:border-gray-600">
+          {{ __('Menu Absensi') }}
+        </div>
+        <x-responsive-nav-link href="{{ route('admin.attendances') }}" :active="request()->routeIs('admin.attendances')">
+          {{ __('Absensi') }}
         </x-responsive-nav-link>
         <x-responsive-nav-link href="{{ route('admin.masters.shift') }}" :active="request()->routeIs('admin.masters.shift')">
           {{ __('Shift') }}
         </x-responsive-nav-link>
-        <x-responsive-nav-link href="{{ route('admin.masters.admin') }}" :active="request()->routeIs('admin.masters.admin')">
-          {{ __('Admin Management') }}
+        <x-responsive-nav-link href="{{ route('admin.import-export.attendances') }}" :active="request()->routeIs('admin.import-export.attendances')">
+          {{ __('Import & Export Absensi') }}
         </x-responsive-nav-link>
-        <x-responsive-nav-link href="{{ route('admin.import-export.users') }}" :active="request()->routeIs('admin.import-export')">
-          Import & Export Karyawan/Admin
+
+        {{-- Menu Payroll --}}
+        <div class="mt-3 border-t border-gray-200 pt-2 text-xs font-semibold uppercase tracking-wide text-gray-400 dark:border-gray-600">
+          {{ __('Menu Payroll') }}
+        </div>
+        <x-responsive-nav-link href="{{ route('admin.payroll.index') }}" :active="request()->routeIs('admin.payroll.index')">
+          {{ __('Dashboard Payroll') }}
         </x-responsive-nav-link>
-        <x-responsive-nav-link href="{{ route('admin.import-export.attendances') }}" :active="request()->routeIs('admin.import-export')">
-          Import & Export Absensi
+        <x-responsive-nav-link href="{{ route('admin.payroll.salary-components') }}" :active="request()->routeIs('admin.payroll.salary-components')">
+          {{ __('Master Komponen') }}
         </x-responsive-nav-link>
-        <x-responsive-nav-link href="{{ route('admin.payroll.index') }}" :active="request()->routeIs('admin.payroll.*')">
-          {{ __('Payroll') }}
+        <x-responsive-nav-link href="{{ route('admin.payroll.employee-salaries') }}" :active="request()->routeIs('admin.payroll.employee-salaries')">
+          {{ __('Setting Gaji') }}
         </x-responsive-nav-link>
+        <x-responsive-nav-link href="{{ route('admin.payroll.generate') }}" :active="request()->routeIs('admin.payroll.generate')">
+          {{ __('Generate Gaji') }}
+        </x-responsive-nav-link>
+
+        {{-- Menu Invoice --}}
+        <div class="mt-3 border-t border-gray-200 pt-2 text-xs font-semibold uppercase tracking-wide text-gray-400 dark:border-gray-600">
+          {{ __('Menu Invoice') }}
+        </div>
         <x-responsive-nav-link href="{{ route('admin.invoice.index') }}" :active="request()->routeIs('admin.invoice.*')">
           {{ __('Invoice') }}
         </x-responsive-nav-link>
-        <x-responsive-nav-link href="{{ route('admin.assets.index') }}" :active="request()->routeIs('admin.assets.*')">
-          {{ __('Aset') }}
-        </x-responsive-nav-link>
+
+        {{-- Performance --}}
+        <div class="mt-3 border-t border-gray-200 pt-2 text-xs font-semibold uppercase tracking-wide text-gray-400 dark:border-gray-600">
+          {{ __('Performance') }}
+        </div>
         <x-responsive-nav-link href="{{ route('admin.performance.index') }}" :active="request()->routeIs('admin.performance.index')">
           {{ __('Performance Dashboard') }}
         </x-responsive-nav-link>
         <x-responsive-nav-link href="{{ route('admin.performance.review') }}" :active="request()->routeIs('admin.performance.review')">
           {{ __('Review Management') }}
+        </x-responsive-nav-link>
+
+        {{-- Lainnya --}}
+        <div class="mt-3 border-t border-gray-200 pt-2 text-xs font-semibold uppercase tracking-wide text-gray-400 dark:border-gray-600">
+          {{ __('Lainnya') }}
+        </div>
+        <x-responsive-nav-link href="{{ route('admin.location-settings') }}" :active="request()->routeIs('admin.location-settings')">
+          {{ __('Pengaturan Lokasi') }}
+        </x-responsive-nav-link>
+        <x-responsive-nav-link href="{{ route('admin.assets.index') }}" :active="request()->routeIs('admin.assets.*')">
+          {{ __('Aset') }}
+        </x-responsive-nav-link>
+        <x-responsive-nav-link href="{{ route('admin.tools.budget-calculator') }}" :active="request()->routeIs('admin.tools.budget-calculator')">
+          {{ __('Budget Calculator') }}
+        </x-responsive-nav-link>
+        <x-responsive-nav-link href="{{ route('tools.prd-generator') }}" :active="request()->routeIs('tools.prd-generator')">
+          {{ __('PRD Generator') }}
         </x-responsive-nav-link>
       @else
         <x-responsive-nav-link href="{{ route('home') }}" :active="request()->routeIs('home')">
@@ -308,6 +393,14 @@
             {{ __('History Review') }}
           </x-responsive-nav-link>
         @endif
+
+        {{-- Lainnya (User) --}}
+        <div class="mt-3 border-t border-gray-200 pt-2 text-xs font-semibold uppercase tracking-wide text-gray-400 dark:border-gray-600">
+          {{ __('Lainnya') }}
+        </div>
+        <x-responsive-nav-link href="{{ route('tools.prd-generator') }}" :active="request()->routeIs('tools.prd-generator')">
+          {{ __('PRD Generator') }}
+        </x-responsive-nav-link>
       @endif
     </div>
 
