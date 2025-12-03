@@ -51,6 +51,26 @@
             <x-nav-link href="{{ route('admin.assets.index') }}" :active="request()->routeIs('admin.assets.*')">
               {{ __('Aset') }}
             </x-nav-link>
+            <x-nav-dropdown :active="request()->routeIs('admin.performance.*')" triggerClasses="text-nowrap">
+              <x-slot name="trigger">
+                {{ __('Performance') }}
+                <x-heroicon-o-chevron-down class="ms-2 h-5 w-5 text-gray-400" />
+              </x-slot>
+              <x-slot name="content">
+                <x-dropdown-link href="{{ route('admin.performance.index') }}" :active="request()->routeIs('admin.performance.index')">
+                  {{ __('Dashboard') }}
+                </x-dropdown-link>
+                <x-dropdown-link href="{{ route('admin.performance.kpi') }}" :active="request()->routeIs('admin.performance.kpi')">
+                  {{ __('KPI Management') }}
+                </x-dropdown-link>
+                <x-dropdown-link href="{{ route('admin.performance.cycles') }}" :active="request()->routeIs('admin.performance.cycles')">
+                  {{ __('Review Cycles') }}
+                </x-dropdown-link>
+                <x-dropdown-link href="{{ route('admin.performance.review') }}" :active="request()->routeIs('admin.performance.review')">
+                  {{ __('Review Management') }}
+                </x-dropdown-link>
+              </x-slot>
+            </x-nav-dropdown>
             <x-nav-dropdown :active="request()->routeIs('admin.masters.*')" triggerClasses="text-nowrap">
               <x-slot name="trigger">
                 {{ __('Master Data') }}
@@ -96,14 +116,40 @@
               </x-slot>
             </x-nav-dropdown>
             
-          @else
-            <x-nav-link href="{{ route('home') }}" :active="request()->routeIs('home')">
-              {{ __('Home') }}
-            </x-nav-link>
-            <x-nav-link href="{{ route('payroll.index') }}" :active="request()->routeIs('payroll.*')">
-              {{ __('Riwayat Gaji') }}
-            </x-nav-link>
-          @endif
+        @else
+          <x-nav-link href="{{ route('home') }}" :active="request()->routeIs('home')">
+            {{ __('Home') }}
+          </x-nav-link>
+          <x-nav-link href="{{ route('payroll.index') }}" :active="request()->routeIs('payroll.*')">
+            {{ __('Riwayat Gaji') }}
+          </x-nav-link>
+          <x-nav-dropdown :active="request()->routeIs('performance.*')" triggerClasses="text-nowrap">
+            <x-slot name="trigger">
+              {{ __('Performance') }}
+              <x-heroicon-o-chevron-down class="ms-2 h-5 w-5 text-gray-400" />
+            </x-slot>
+            <x-slot name="content">
+              <x-dropdown-link href="{{ route('performance.index') }}" :active="request()->routeIs('performance.index')">
+                {{ __('My Performance') }}
+              </x-dropdown-link>
+              <x-dropdown-link href="{{ route('performance.tutorial') }}" :active="request()->routeIs('performance.tutorial')">
+                {{ __('Tutorial KPI') }}
+              </x-dropdown-link>
+              @php
+                // Check if user has reviewed any assessments (simple check for manager)
+                $hasReviewed = \App\Models\AssessmentItem::whereHas('assessment', function ($q) {
+                  $q->where('user_id', '!=', auth()->id());
+                })->whereNotNull('manager_score')->exists();
+                $isManager = auth()->user()->isAdmin || $hasReviewed;
+              @endphp
+              @if ($isManager)
+                <x-dropdown-link href="{{ route('performance.manager-history') }}" :active="request()->routeIs('performance.manager-history')">
+                  {{ __('History Review') }}
+                </x-dropdown-link>
+              @endif
+            </x-slot>
+          </x-nav-dropdown>
+        @endif
         </div>
       </div>
 
@@ -231,6 +277,12 @@
         <x-responsive-nav-link href="{{ route('admin.assets.index') }}" :active="request()->routeIs('admin.assets.*')">
           {{ __('Aset') }}
         </x-responsive-nav-link>
+        <x-responsive-nav-link href="{{ route('admin.performance.index') }}" :active="request()->routeIs('admin.performance.index')">
+          {{ __('Performance Dashboard') }}
+        </x-responsive-nav-link>
+        <x-responsive-nav-link href="{{ route('admin.performance.review') }}" :active="request()->routeIs('admin.performance.review')">
+          {{ __('Review Management') }}
+        </x-responsive-nav-link>
       @else
         <x-responsive-nav-link href="{{ route('home') }}" :active="request()->routeIs('home')">
           {{ __('Home') }}
@@ -238,6 +290,24 @@
         <x-responsive-nav-link href="{{ route('payroll.index') }}" :active="request()->routeIs('payroll.*')">
           {{ __('Riwayat Gaji') }}
         </x-responsive-nav-link>
+        <x-responsive-nav-link href="{{ route('performance.index') }}" :active="request()->routeIs('performance.index')">
+          {{ __('My Performance') }}
+        </x-responsive-nav-link>
+        <x-responsive-nav-link href="{{ route('performance.tutorial') }}" :active="request()->routeIs('performance.tutorial')">
+          {{ __('Tutorial KPI') }}
+        </x-responsive-nav-link>
+        @php
+          // Check if user has reviewed any assessments (simple check for manager)
+          $hasReviewed = \App\Models\AssessmentItem::whereHas('assessment', function ($q) {
+            $q->where('user_id', '!=', auth()->id());
+          })->whereNotNull('manager_score')->exists();
+          $isManager = auth()->user()->isAdmin || $hasReviewed;
+        @endphp
+        @if ($isManager)
+          <x-responsive-nav-link href="{{ route('performance.manager-history') }}" :active="request()->routeIs('performance.manager-history')">
+            {{ __('History Review') }}
+          </x-responsive-nav-link>
+        @endif
       @endif
     </div>
 

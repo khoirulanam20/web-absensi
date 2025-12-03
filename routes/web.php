@@ -127,7 +127,46 @@ Route::middleware([
         Route::get('/assets', function () {
             return view('admin.assets.index');
         })->name('admin.assets.index');
+
+        // Performance / KPI Management
+        Route::get('/performance', function () {
+            return view('admin.performance.index');
+        })->name('admin.performance.index');
+        Route::get('/performance/kpi', function () {
+            return view('admin.performance.kpi');
+        })->name('admin.performance.kpi');
+        Route::get('/performance/cycles', function () {
+            return view('admin.performance.cycles');
+        })->name('admin.performance.cycles');
+        Route::get('/performance/review', function () {
+            return view('admin.performance.review');
+        })->name('admin.performance.review');
     });
+});
+
+// Performance Routes (accessible by users)
+Route::middleware(['auth'])->group(function () {
+    Route::get('/performance', function () {
+        return view('performance.index');
+    })->name('performance.index');
+    Route::get('/performance/tutorial', function () {
+        return view('performance.tutorial');
+    })->name('performance.tutorial');
+    Route::get('/performance/self/{cycle}', function ($cycle) {
+        return view('performance.self-assessment', ['cycleId' => $cycle]);
+    })->name('performance.self');
+    Route::get('/performance/manager/{cycle}', function ($cycle) {
+        return view('performance.manager-review', ['cycleId' => $cycle]);
+    })->name('performance.manager');
+    Route::get('/performance/360/{cycle}', function ($cycle) {
+        return view('performance.peer-review', ['cycleId' => $cycle]);
+    })->name('performance.360');
+    Route::get('/performance/results/{assessment}', function ($assessment) {
+        return view('performance.results', ['assessmentId' => $assessment]);
+    })->name('performance.results');
+    Route::get('/performance/manager-history', function () {
+        return view('performance.manager-history');
+    })->name('performance.manager-history');
 });
 
 // User Payroll Routes (accessible by both user and admin)

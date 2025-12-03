@@ -14,4 +14,11 @@ class JobTitle extends Model
     protected $fillable = [
         'name'
     ];
+
+    public function kpis()
+    {
+        return $this->belongsToMany(Kpi::class, 'kpi_job_title')
+            ->withPivot('default_weight', 'default_target')
+            ->withTimestamps();
+    }
 }

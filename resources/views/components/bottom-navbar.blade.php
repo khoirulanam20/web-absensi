@@ -19,10 +19,10 @@
         <span class="mt-1">Cuti</span>
       </a>
 
-      <a href="{{ route('payroll.index') }}"
-        class="flex flex-col items-center justify-center px-4 py-2 text-xs {{ request()->routeIs('payroll.*') ? 'text-blue-600 dark:text-blue-400' : 'text-gray-500 dark:text-gray-400' }}">
-        <x-heroicon-o-calculator class="h-6 w-6" />
-        <span class="mt-1">Gaji</span>
+      <a href="{{ route('performance.index') }}"
+        class="flex flex-col items-center justify-center px-4 py-2 text-xs {{ request()->routeIs('performance.*') ? 'text-blue-600 dark:text-blue-400' : 'text-gray-500 dark:text-gray-400' }}">
+        <x-heroicon-o-chart-bar class="h-6 w-6" />
+        <span class="mt-1">KPI</span>
       </a>
 
       <a href="{{ route('profile.show') }}"

@@ -31,10 +31,10 @@
         <span class="mt-1">Invoice</span>
       </a>
 
-      <a href="{{ route('admin.assets.index') }}"
-        class="flex flex-col items-center justify-center px-2 py-2 text-xs {{ request()->routeIs('admin.assets.*') ? 'text-blue-600 dark:text-blue-400' : 'text-gray-500 dark:text-gray-400' }}">
-        <x-heroicon-o-cube class="h-5 w-5" />
-        <span class="mt-1">Aset</span>
+      <a href="{{ route('admin.performance.index') }}"
+        class="flex flex-col items-center justify-center px-2 py-2 text-xs {{ request()->routeIs('admin.performance.*') ? 'text-blue-600 dark:text-blue-400' : 'text-gray-500 dark:text-gray-400' }}">
+        <x-heroicon-o-chart-bar class="h-5 w-5" />
+        <span class="mt-1">KPI</span>
       </a>
     </div>
   </nav>

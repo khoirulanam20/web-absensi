@@ -137,4 +137,24 @@ class User extends Authenticatable
     {
         return $this->hasMany(Payroll::class);
     }
+
+    public function assessments()
+    {
+        return $this->hasMany(Assessment::class);
+    }
+
+    public function kpiAssignments()
+    {
+        return $this->hasMany(KpiAssignment::class);
+    }
+
+    public function assessmentReviews()
+    {
+        return $this->hasMany(AssessmentReview::class, 'reviewer_id');
+    }
+
+    public function feedbacks()
+    {
+        return $this->hasMany(Feedback::class, 'created_by');
+    }
 }
