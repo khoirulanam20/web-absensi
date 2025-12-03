@@ -1,12 +1,12 @@
-<nav x-data="{ open: false }" class="border-b border-gray-100 bg-white dark:border-gray-700 dark:bg-gray-800">
+<nav x-data="{ open: false }" class="sticky top-0 z-40 border-b border-gray-100 bg-white dark:border-gray-700 dark:bg-gray-800">
   <!-- Primary Navigation Menu -->
-  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-    <div class="flex h-16 justify-between">
+  <div class="mx-auto max-w-7xl px-2 sm:px-4 lg:px-8">
+    <div class="flex h-14 sm:h-16 justify-between">
       <div class="flex">
         <!-- Logo -->
         <div class="flex shrink-0 items-center">
-          <a href="{{ Auth::user()->isAdmin ? route('admin.dashboard') : route('home') }}">
-            <x-application-mark class="block h-9 w-auto" />
+          <a href="{{ Auth::user()->isAdmin ? route('admin.dashboard') : route('home') }}" class="flex items-center">
+            <x-application-mark class="block h-7 w-auto sm:h-9 sm:w-auto" />
           </a>
         </div>
 
@@ -47,6 +47,9 @@
             </x-nav-dropdown>
             <x-nav-link href="{{ route('admin.invoice.index') }}" :active="request()->routeIs('admin.invoice.*')">
               {{ __('Invoice') }}
+            </x-nav-link>
+            <x-nav-link href="{{ route('admin.assets.index') }}" :active="request()->routeIs('admin.assets.*')">
+              {{ __('Aset') }}
             </x-nav-link>
             <x-nav-dropdown :active="request()->routeIs('admin.masters.*')" triggerClasses="text-nowrap">
               <x-slot name="trigger">
@@ -224,6 +227,9 @@
         </x-responsive-nav-link>
         <x-responsive-nav-link href="{{ route('admin.invoice.index') }}" :active="request()->routeIs('admin.invoice.*')">
           {{ __('Invoice') }}
+        </x-responsive-nav-link>
+        <x-responsive-nav-link href="{{ route('admin.assets.index') }}" :active="request()->routeIs('admin.assets.*')">
+          {{ __('Aset') }}
         </x-responsive-nav-link>
       @else
         <x-responsive-nav-link href="{{ route('home') }}" :active="request()->routeIs('home')">

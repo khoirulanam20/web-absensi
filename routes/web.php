@@ -122,6 +122,11 @@ Route::middleware([
             ->name('admin.invoice.show');
         Route::get('/invoice/{id}/pdf', [InvoiceController::class, 'pdf'])
             ->name('admin.invoice.pdf');
+
+        // Asset Management
+        Route::get('/assets', function () {
+            return view('admin.assets.index');
+        })->name('admin.assets.index');
     });
 });
 

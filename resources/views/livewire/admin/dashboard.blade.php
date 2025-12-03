@@ -6,63 +6,62 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
       integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
   @endpushOnce
-  <div class="flex flex-col justify-between sm:flex-row">
-    <h3 class="mb-4 text-lg font-semibold leading-tight text-gray-800 dark:text-gray-200">
+  <div class="mb-4 flex flex-col gap-2 sm:flex-row sm:justify-between">
+    <h3 class="text-base sm:text-lg font-semibold leading-tight text-gray-800 dark:text-gray-200">
       Absensi Hari Ini
     </h3>
-    <h3 class="mb-4 text-lg font-semibold leading-tight text-gray-800 dark:text-gray-200">
+    <h3 class="text-sm sm:text-lg font-semibold leading-tight text-gray-800 dark:text-gray-200">
       Jumlah Karyawan: {{ $employeesCount }}
     </h3>
   </div>
-  <div class="mb-4 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
-    <div class="rounded-md bg-green-200 px-8 py-4 text-gray-800 dark:bg-green-900 dark:text-white dark:shadow-gray-700">
-      <span class="text-2xl font-semibold md:text-3xl">Hadir: {{ $totalHadir }}</span><br>
-      <span>Terlambat: {{ $lateCount }}</span>
+  <div class="mb-4 grid grid-cols-1 sm:grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
+    <div class="rounded-md bg-green-200 px-4 py-3 sm:px-8 sm:py-4 text-gray-800 dark:bg-green-900 dark:text-white dark:shadow-gray-700">
+      <span class="text-xl sm:text-2xl md:text-3xl font-semibold">Hadir: {{ $totalHadir }}</span><br>
+      <span class="text-xs sm:text-sm">Terlambat: {{ $lateCount }}</span>
     </div>
-    <div class="rounded-md bg-blue-200 px-8 py-4 text-gray-800 dark:bg-blue-900 dark:text-white dark:shadow-gray-700">
-      <span class="text-2xl font-semibold md:text-3xl">Izin: {{ $izinCount }}</span><br>
-      <span>Izin/Cuti</span>
+    <div class="rounded-md bg-blue-200 px-4 py-3 sm:px-8 sm:py-4 text-gray-800 dark:bg-blue-900 dark:text-white dark:shadow-gray-700">
+      <span class="text-xl sm:text-2xl md:text-3xl font-semibold">Izin: {{ $izinCount }}</span><br>
+      <span class="text-xs sm:text-sm">Izin/Cuti</span>
     </div>
-    <div
-      class="rounded-md bg-purple-200 px-8 py-4 text-gray-800 dark:bg-purple-900 dark:text-white dark:shadow-gray-700">
-      <span class="text-2xl font-semibold md:text-3xl">Sakit: {{ $sickCount }}</span>
+    <div class="rounded-md bg-purple-200 px-4 py-3 sm:px-8 sm:py-4 text-gray-800 dark:bg-purple-900 dark:text-white dark:shadow-gray-700">
+      <span class="text-xl sm:text-2xl md:text-3xl font-semibold">Sakit: {{ $sickCount }}</span>
     </div>
-    <div class="rounded-md bg-red-200 px-8 py-4 text-gray-800 dark:bg-red-900 dark:text-white dark:shadow-gray-700">
-      <span class="text-2xl font-semibold md:text-3xl">Tidak Hadir: {{ $absentCount }}</span><br>
-      <span>Tidak/Belum Hadir</span>
+    <div class="rounded-md bg-red-200 px-4 py-3 sm:px-8 sm:py-4 text-gray-800 dark:bg-red-900 dark:text-white dark:shadow-gray-700">
+      <span class="text-xl sm:text-2xl md:text-3xl font-semibold">Tidak Hadir: {{ $absentCount }}</span><br>
+      <span class="text-xs sm:text-sm">Tidak/Belum Hadir</span>
     </div>
   </div>
 
-  <div class="mb-4 overflow-x-scroll">
+  <div class="mb-4 overflow-x-auto">
     <table class="w-full divide-y divide-gray-200 dark:divide-gray-700">
       <thead class="bg-gray-50 dark:bg-gray-900">
         <tr>
-          <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300">
+          <th scope="col" class="px-3 py-2 sm:px-4 sm:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300">
             {{ __('Name') }}
           </th>
-          <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300">
+          <th scope="col" class="hidden sm:table-cell px-3 py-2 sm:px-4 sm:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300">
             {{ __('NIP') }}
           </th>
-          <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300">
+          <th scope="col" class="hidden md:table-cell px-3 py-2 sm:px-4 sm:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300">
             {{ __('Division') }}
           </th>
-          <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300">
+          <th scope="col" class="hidden lg:table-cell px-3 py-2 sm:px-4 sm:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300">
             {{ __('Job Title') }}
           </th>
-          <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300">
+          <th scope="col" class="hidden lg:table-cell px-3 py-2 sm:px-4 sm:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300">
             {{ __('Shift') }}
           </th>
           <th scope="col"
-            class="text-nowrap border border-gray-300 px-1 py-3 text-center text-xs font-medium text-gray-500 dark:border-gray-600 dark:text-gray-300">
+            class="text-nowrap border border-gray-300 px-1 py-2 sm:py-3 text-center text-xs font-medium text-gray-500 dark:border-gray-600 dark:text-gray-300">
             Status
           </th>
-          <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300">
+          <th scope="col" class="px-3 py-2 sm:px-4 sm:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300">
             {{ __('Time In') }}
           </th>
-          <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300">
+          <th scope="col" class="hidden sm:table-cell px-3 py-2 sm:px-4 sm:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300">
             {{ __('Time Out') }}
           </th>
-          <th scope="col" class="relative">
+          <th scope="col" class="relative px-3 py-2 sm:px-4 sm:py-3">
             <span class="sr-only">Actions</span>
           </th>
         </tr>
@@ -123,43 +122,43 @@
           @endphp
           <tr wire:key="{{ $employee->id }}" class="group">
             {{-- Detail karyawan --}}
-            <td class="{{ $class }} text-nowrap group-hover:bg-gray-100 dark:group-hover:bg-gray-700">
+            <td class="px-3 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-medium text-gray-900 dark:text-white text-nowrap group-hover:bg-gray-100 dark:group-hover:bg-gray-700">
               {{ $employee->name }}
             </td>
-            <td class="{{ $class }} group-hover:bg-gray-100 dark:group-hover:bg-gray-700">
+            <td class="hidden sm:table-cell px-3 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-medium text-gray-900 dark:text-white group-hover:bg-gray-100 dark:group-hover:bg-gray-700">
               {{ $employee->nip }}
             </td>
-            <td class="{{ $class }} text-nowrap group-hover:bg-gray-100 dark:group-hover:bg-gray-700">
+            <td class="hidden md:table-cell px-3 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-medium text-gray-900 dark:text-white text-nowrap group-hover:bg-gray-100 dark:group-hover:bg-gray-700">
               {{ $employee->division?->name ?? '-' }}
             </td>
-            <td class="{{ $class }} text-nowrap group-hover:bg-gray-100 dark:group-hover:bg-gray-700">
+            <td class="hidden lg:table-cell px-3 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-medium text-gray-900 dark:text-white text-nowrap group-hover:bg-gray-100 dark:group-hover:bg-gray-700">
               {{ $employee->jobTitle?->name ?? '-' }}
             </td>
-            <td class="{{ $class }} text-nowrap group-hover:bg-gray-100 dark:group-hover:bg-gray-700">
+            <td class="hidden lg:table-cell px-3 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-medium text-gray-900 dark:text-white text-nowrap group-hover:bg-gray-100 dark:group-hover:bg-gray-700">
               {{ $attendance->shift?->name ?? '-' }}
             </td>
 
             {{-- Absensi --}}
             <td
-              class="{{ $bgColor }} text-nowrap px-1 py-3 text-center text-sm font-medium text-gray-900 dark:text-white">
+              class="{{ $bgColor }} text-nowrap px-1 py-2 sm:py-3 text-center text-xs sm:text-sm font-medium text-gray-900 dark:text-white">
               {{ $displayStatus }}
             </td>
 
             {{-- Waktu masuk/keluar --}}
-            <td class="{{ $class }} group-hover:bg-gray-100 dark:group-hover:bg-gray-700">
+            <td class="px-3 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-medium text-gray-900 dark:text-white group-hover:bg-gray-100 dark:group-hover:bg-gray-700">
               {{ $timeIn ?? '-' }}
             </td>
-            <td class="{{ $class }} group-hover:bg-gray-100 dark:group-hover:bg-gray-700">
+            <td class="hidden sm:table-cell px-3 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-medium text-gray-900 dark:text-white group-hover:bg-gray-100 dark:group-hover:bg-gray-700">
               {{ $timeOut ?? '-' }}
             </td>
 
             {{-- Action --}}
             <td
-              class="cursor-pointer text-center text-sm font-medium text-gray-900 group-hover:bg-gray-100 dark:text-white dark:group-hover:bg-gray-700">
-              <div class="flex items-center justify-center gap-3">
+              class="cursor-pointer px-3 py-2 sm:px-4 sm:py-3 text-center text-xs sm:text-sm font-medium text-gray-900 group-hover:bg-gray-100 dark:text-white dark:group-hover:bg-gray-700">
+              <div class="flex items-center justify-center gap-2 sm:gap-3">
                 @if ($attendance && ($attendance->attachment || $attendance->note || $attendance->lat_lng))
                   <x-button type="button" wire:click="show({{ $attendance->id }})"
-                    onclick="setLocation({{ $attendance->latitude ?? 0 }}, {{ $attendance->longitude ?? 0 }})">
+                    onclick="setLocation({{ $attendance->latitude ?? 0 }}, {{ $attendance->longitude ?? 0 }})" class="text-xs">
                     {{ __('Detail') }}
                   </x-button>
                 @else

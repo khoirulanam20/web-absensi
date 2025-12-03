@@ -30,21 +30,22 @@
     <!-- Page Heading -->
     @if (isset($header))
       <header class="bg-white shadow dark:bg-gray-800">
-        <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+        <div class="mx-auto max-w-7xl px-3 py-4 sm:px-4 sm:py-6 lg:px-8">
           {{ $header }}
         </div>
       </header>
     @endif
 
     <!-- Page Content -->
-    <main class="{{ !Auth::check() || Auth::user()->isAdmin ? '' : 'pb-20' }}">
+    <main class="{{ !Auth::check() ? '' : (Auth::user()->isAdmin ? 'pb-20' : 'pb-20') }}">
       {{ $slot }}
     </main>
   </div>
 
-  <!-- Bottom Navbar for Mobile (User only) -->
+  <!-- Bottom Navbar for Mobile -->
   @auth
     <x-bottom-navbar />
+    <x-bottom-navbar-admin />
   @endauth
 
   @stack('modals')

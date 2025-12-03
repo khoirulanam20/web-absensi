@@ -1,14 +1,14 @@
 <div>
-  <div class="mb-4 flex-col items-center gap-5 sm:flex-row md:flex md:justify-between lg:mr-4">
-    <h3 class="mb-4 text-lg font-semibold leading-tight text-gray-800 dark:text-gray-200 md:mb-0">
+  <div class="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <h3 class="text-base sm:text-lg font-semibold leading-tight text-gray-800 dark:text-gray-200">
       Data Karyawan
     </h3>
-    <x-button wire:click="showCreating">
+    <x-button wire:click="showCreating" class="w-full sm:w-auto text-sm">
       <x-heroicon-o-plus class="mr-2 h-4 w-4" /> Tambah Karyawan
     </x-button>
   </div>
-  <div class="mb-1 text-sm dark:text-white">Filter:</div>
-  <div class="mb-4 grid grid-cols-3 flex-wrap items-center gap-5 md:gap-8 lg:flex">
+  <div class="mb-2 text-xs sm:text-sm dark:text-white">Filter:</div>
+  <div class="mb-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 flex-wrap items-center gap-3 sm:gap-5 md:gap-8 lg:flex">
     <x-select id="division" wire:model.live="division">
       <option value="">{{ __('Select Division') }}</option>
       @foreach (App\Models\Division::all() as $_division)
