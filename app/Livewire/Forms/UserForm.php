@@ -252,7 +252,8 @@ class UserForm extends Form
             EmployeeDetail::create($employeeDetailData);
         }
         
-        $this->reset();
+        // Untuk update profil, jangan kosongkan form; reload data terbaru ke form
+        $this->setUser($this->user->fresh());
     }
 
     public function deleteProfilePhoto()
@@ -308,14 +309,29 @@ class UserForm extends Form
 
     private function isAllowed()
     {
-        // If updating own profile, allow it
-        if ($this->user && Auth::user()?->id === $this->user->id) {
+        $authUser = Auth::user();
+
+        if (!$authUser) {
+            return false;
+        }
+
+        // Pastikan $this->user terisi user yang sedang diedit
+        if (!$this->user) {
+            $this->user = $authUser;
+        }
+
+        // 1. User biasa boleh mengedit profilnya sendiri
+        if ($this->user && $authUser->id === $this->user->id && !$authUser->isAdmin && !$authUser->isSuperadmin) {
             return true;
         }
-        
-        if ($this->group === 'user') {
-            return Auth::user()?->isAdmin;
+
+        // 2. Admin / Superadmin mengelola akun user (group user)
+        $targetGroup = $this->group ?? $this->user->group ?? 'user';
+        if ($targetGroup === 'user') {
+            return $authUser->isAdmin || $authUser->isSuperadmin;
         }
-        return Auth::user()?->isSuperadmin || (Auth::user()?->isAdmin && Auth::user()?->id === $this->user?->id);
+
+        // 3. Untuk akun non-user (misal admin lain), hanya superadmin
+        return $authUser->isSuperadmin;
     }
 }

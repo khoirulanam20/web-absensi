@@ -22,11 +22,6 @@ class EditProfile extends Component
 
     public function update()
     {
-        // User can only update their own profile
-        if ($this->form->user->id !== Auth::id()) {
-            return abort(403);
-        }
-
         $this->form->update();
         $this->banner(__('Profile updated successfully.'));
     }
