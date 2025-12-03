@@ -245,7 +245,7 @@
           <div class="logo-fallback">F</div>
         @endif
       </div>
-      <div class="invoice-title">INVOICE d</div>
+      <div class="invoice-title">INVOICE</div>
     </div>
     <div class="order-number">
       <div class="order-number-label">ORDER NUMBER:</div>
