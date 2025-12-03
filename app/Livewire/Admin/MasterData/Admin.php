@@ -39,6 +39,10 @@ class Admin extends Component
         $this->form->reset();
         $this->creating = true;
         $this->form->password = 'admin';
+        // Set default values for required fields
+        $this->form->gender = 'male';
+        $this->form->city = '-';
+        $this->form->address = '-';
     }
 
     public function create()

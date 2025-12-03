@@ -45,6 +45,9 @@
                 </x-dropdown-link>
               </x-slot>
             </x-nav-dropdown>
+            <x-nav-link href="{{ route('admin.invoice.index') }}" :active="request()->routeIs('admin.invoice.*')">
+              {{ __('Invoice') }}
+            </x-nav-link>
             <x-nav-dropdown :active="request()->routeIs('admin.masters.*')" triggerClasses="text-nowrap">
               <x-slot name="trigger">
                 {{ __('Master Data') }}
@@ -218,6 +221,9 @@
         </x-responsive-nav-link>
         <x-responsive-nav-link href="{{ route('admin.payroll.index') }}" :active="request()->routeIs('admin.payroll.*')">
           {{ __('Payroll') }}
+        </x-responsive-nav-link>
+        <x-responsive-nav-link href="{{ route('admin.invoice.index') }}" :active="request()->routeIs('admin.invoice.*')">
+          {{ __('Invoice') }}
         </x-responsive-nav-link>
       @else
         <x-responsive-nav-link href="{{ route('home') }}" :active="request()->routeIs('home')">

@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\AttendanceController;
 use App\Http\Controllers\Admin\EmployeeController;
 use App\Http\Controllers\Admin\ImportExportController;
 use App\Http\Controllers\Admin\PayrollController;
+use App\Http\Controllers\Admin\InvoiceController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserAttendanceController;
 use Illuminate\Support\Facades\Auth;
@@ -113,6 +114,14 @@ Route::middleware([
             ->name('admin.payroll.show');
         Route::get('/payroll/{id}/pdf', [PayrollController::class, 'pdf'])
             ->name('admin.payroll.pdf');
+
+        // Invoice Management
+        Route::get('/invoice', [InvoiceController::class, 'index'])
+            ->name('admin.invoice.index');
+        Route::get('/invoice/{id}', [InvoiceController::class, 'show'])
+            ->name('admin.invoice.show');
+        Route::get('/invoice/{id}/pdf', [InvoiceController::class, 'pdf'])
+            ->name('admin.invoice.pdf');
     });
 });
 

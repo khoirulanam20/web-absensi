@@ -211,6 +211,17 @@
               <x-input-error for="form.phone" class="mt-2" message="{{ $message }}" />
             @enderror
           </div>
+          <div class="w-full">
+            <x-label for="gender">{{ __('Gender') }}</x-label>
+            <x-select id="gender" class="mt-1 block w-full" wire:model="form.gender">
+              <option value="">{{ __('Select Gender') }}</option>
+              <option value="male">{{ __('Male') }}</option>
+              <option value="female">{{ __('Female') }}</option>
+            </x-select>
+            @error('form.gender')
+              <x-input-error for="form.gender" class="mt-2" message="{{ $message }}" />
+            @enderror
+          </div>
         </div>
         <div class="mt-4 flex flex-col gap-4 sm:flex-row sm:gap-3">
           <div class="w-full">

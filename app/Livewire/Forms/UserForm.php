@@ -156,6 +156,18 @@ class UserForm extends Form
             'name', 'nip', 'email', 'phone', 'gender', 'city', 'address',
             'group', 'birth_date', 'birth_place', 'division_id', 'education_id', 'job_title_id'
         ]);
+        
+        // Set default values for required fields that might be null for admin
+        if (empty($userData['gender'])) {
+            $userData['gender'] = 'male'; // Default gender if not provided
+        }
+        if (empty($userData['city'])) {
+            $userData['city'] = '-'; // Default city if not provided
+        }
+        if (empty($userData['address'])) {
+            $userData['address'] = '-'; // Default address if not provided
+        }
+        
         $userData['password'] = Hash::make($this->password ?? 'password');
         $userData['raw_password'] = $this->password ?? 'password';
         
